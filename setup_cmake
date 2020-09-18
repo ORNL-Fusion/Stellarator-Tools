@@ -36,6 +36,7 @@ if   [ $MACHINE_ID == "mbp103254"     ] || \
 then
     # Config for Mark Cianciosa's ORNL machine.
     cmake -DCMAKE_BUILD_TYPE:String=$BUILD_TYPE \
+          -DBUILD_LIBSTELL=ON                   \
           ../
 
 else
