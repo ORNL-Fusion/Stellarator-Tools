@@ -55,3 +55,9 @@ endmacro ()
 #                 https://url.to.project
 #                 project_tag (Default to master)
 #                 SUB) #Optional Sub project directories.
+
+# Register LIBSTELL
+register_project(libstell
+                 LIBSTELL
+                 https://github.com/ORNL-Fusion/LIBSTELL.git
+                 master)
