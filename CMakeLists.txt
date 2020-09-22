@@ -6,15 +6,16 @@ include (FetchContent)
 find_package (Git)
 
 #  Define a macro to register new projects.
-macro (register_project name dir url tag)
+macro (register_project name dir url default_tag)
     option (BUILD_${dir} "Build ${name} subproject." OFF)
+    set (BUILD_TAG_${dir} ${default_tag} CACHE STRING "Name of the tag to checkout.")
 
     if (BUILD_${dir})
 #  Set up the sub project repository.
         FetchContent_Declare(
             ${name}
             GIT_REPOSITORY ${url}
-            GIT_TAG origin/${tag}
+            GIT_TAG origin/${BUILD_TAG_${dir}}
             SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${dir}
         )
 
@@ -24,7 +25,7 @@ macro (register_project name dir url tag)
 #  By default cmake clones projects in a headless state. After the repo is
 #  cloned checkout the requested tag so repo is in a working state.
             execute_process(
-                COMMAND ${GIT_EXECUTABLE} checkout ${tag}
+                COMMAND ${GIT_EXECUTABLE} checkout ${BUILD_TAG_${dir}}
                 WORKING_DIRECTORY ${${name}_SOURCE_DIR}
             )
 
