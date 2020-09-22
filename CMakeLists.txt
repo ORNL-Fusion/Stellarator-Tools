@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 3.14)
 
 project (stellarator_tools)
 
+enable_testing ()
+
 include (FetchContent)
 find_package (Git)
 
