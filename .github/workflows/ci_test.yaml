@@ -5,11 +5,18 @@ jobs:
     ci_test:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v1
             - name: Show current directory.
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools
               run: ls
+            - name: Clone Repo
+              shell: bash
+              working-directory: ${{runner.workspace}}
+              run: git clone https://github.com/ORNL-Fusion/Stellarator-Tools.git ${{runner.workspace}}/Stellarator-Tools
+            - name: Checkout Branch
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/
+              run: git checkout master_dev
             - name: Create build directory.
               run: cmake -E make_directory ${{runner.workspace}}/Stellarator-Tools/build
             - name: Show current directory.
