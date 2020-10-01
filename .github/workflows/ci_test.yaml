@@ -3,7 +3,7 @@ on:
     workflow_dispatch:
 jobs:
     ci_test:
-        run-on: ubuntu-latest
+        runs-on: ubuntu-latest
         steps:
             - uses:actions/checkout@master_Dev
             - name: Create build directory.
