@@ -16,6 +16,13 @@ jobs:
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools
               run: ls
+            - name: Check Status
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools
+              run: git status
+            - name: Install Libraries
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/LIBSTELL/.github/scripts/install_deps
             - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
