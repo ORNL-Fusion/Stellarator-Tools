@@ -5,11 +5,11 @@ jobs:
     ci_test:
         runs-on: ubuntu-latest
         steps:
-#            - uses: actions/checkout@master_dev
+            - uses: actions/checkout@v1
             - name: Show current directory.
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools
-              run: ls ${{runner.workspace}}
+              run: ls
             - name: Create build directory.
               run: cmake -E make_directory ${{runner.workspace}}/Stellarator-Tools/build
             - name: Show current directory.
@@ -18,13 +18,13 @@ jobs:
               run: ls
             - name: Configure CMake
               shell: bash
-              working-directory: ${{runner.workspace}}/build
-              run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE=Release -DBUILD_MAKEGRID=ON -DBUILD_TAG_LIBSTELL=master_dev -DBUILD_TAG_MAKEGRID=master_dev -USE_FAST_COPY=ON -DUSE_PROFILER=ON $GITHUB_WORKSPACE
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build
+              run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE=Release -DBUILD_MAKEGRID=ON -DBUILD_TAG_LIBSTELL=master_dev -DBUILD_TAG_MAKEGRID=master_dev -USE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
             - name: Build
               shell: bash
-              working-directory: ${{runner.workspace}}/build
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build
               run: make
             - name: Test
               shell: bash
-              working-directory: ${{runner.workspace}}/build
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build
               run: make test
