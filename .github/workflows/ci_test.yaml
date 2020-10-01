@@ -23,7 +23,7 @@ jobs:
                 sudo apt-get install libopenmpi-dev
             - name: Check install
               shell: bash
-              run: ls /usr/lib/x86_64-linux-gnu/
+              run: ls /usr/include
             - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
