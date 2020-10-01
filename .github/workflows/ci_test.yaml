@@ -8,8 +8,8 @@ jobs:
 #            - uses: actions/checkout@master_dev
             - name: Show current directory.
               shell: bash
-              working-directory: ${{runner.workspace}}/build
-              run: ls .
+              working-directory: ${{runner.workspace}}
+              run: ls
             - name: Create build directory.
               run: cmake -E make_directory ${{runner.workspace}}/build
             - name: Configure CMake
