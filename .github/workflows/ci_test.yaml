@@ -5,10 +5,6 @@ jobs:
     ci_test:
         runs-on: ubuntu-latest
         steps:
-            - name: Show current directory.
-              shell: bash
-              working-directory: ${{runner.workspace}}/Stellarator-Tools
-              run: ls
             - name: Clone Repo
               shell: bash
               working-directory: ${{runner.workspace}}
@@ -19,18 +15,12 @@ jobs:
               run: git checkout master_dev
             - name: Create build directory.
               run: cmake -E make_directory ${{runner.workspace}}/Stellarator-Tools/build
-            - name: Show current directory.
-              shell: bash
-              working-directory: ${{runner.workspace}}/Stellarator-Tools
-              run: ls
-            - name: Check Status
-              shell: bash
-              working-directory: ${{runner.workspace}}/Stellarator-Tools
-              run: git status
             - name: Install Libraries
               shell: bash
-              working-directory: ${{runner.workspace}}/Stellarator-Tools/LIBSTELL/.github/scripts
-              run: install_deps
+              run: |
+                sudo apt-get install libnetcdf-dev
+                sudo apt-get install libnetcdff-dev
+                sudo apt-get install libopenmpi-dev
             - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
