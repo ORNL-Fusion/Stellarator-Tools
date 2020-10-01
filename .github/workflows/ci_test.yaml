@@ -5,7 +5,11 @@ jobs:
     ci_test:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@master_dev
+#            - uses: actions/checkout@master_dev
+            - name: Show current directory.
+              shell: bash
+              working-directory: ${{runner.workspace}}/build
+              run: ls .
             - name: Create build directory.
               run: cmake -E make_directory ${{runner.workspace}}/build
             - name: Configure CMake
