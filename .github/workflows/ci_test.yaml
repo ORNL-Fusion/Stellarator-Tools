@@ -9,9 +9,13 @@ jobs:
             - name: Show current directory.
               shell: bash
               working-directory: ${{runner.workspace}}
-              run: ls
+              run: ls ${{runner.workspace}}
             - name: Create build directory.
               run: cmake -E make_directory ${{runner.workspace}}/build
+            - name: Show current directory.
+              shell: bash
+              working-directory: ${{runner.workspace}}
+              run: ls ${{runner.workspace}}
             - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/build
