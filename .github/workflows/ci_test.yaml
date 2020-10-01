@@ -24,7 +24,7 @@ jobs:
             - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
-              run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE=Release -DBUILD_MAKEGRID=ON -DBUILD_TAG_LIBSTELL=master_dev -DBUILD_TAG_MAKEGRID=master_dev -USE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
+              run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE=Release -DBUILD_MAKEGRID=ON -DBUILD_TAG_LIBSTELL=master_dev -DBUILD_TAG_MAKEGRID=master_dev -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
             - name: Build
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
