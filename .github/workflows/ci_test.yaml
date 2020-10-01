@@ -1,4 +1,3 @@
-syntax error
 name: Continous Integration Test
 on:
     workflow_dispatch:
