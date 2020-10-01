@@ -8,14 +8,14 @@ jobs:
 #            - uses: actions/checkout@master_dev
             - name: Show current directory.
               shell: bash
-              working-directory: ${{runner.workspace}}
+              working-directory: ${{runner.workspace}}/Stellarator-Tools
               run: ls ${{runner.workspace}}
             - name: Create build directory.
-              run: cmake -E make_directory ${{runner.workspace}}/build
+              run: cmake -E make_directory ${{runner.workspace}}/Stellarator-Tools/build
             - name: Show current directory.
               shell: bash
-              working-directory: ${{runner.workspace}}
-              run: ls ${{runner.workspace}}
+              working-directory: ${{runner.workspace}}/Stellarator-Tools
+              run: ls
             - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/build
