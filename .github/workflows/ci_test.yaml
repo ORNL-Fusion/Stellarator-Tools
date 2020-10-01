@@ -22,7 +22,8 @@ jobs:
               run: git status
             - name: Install Libraries
               shell: bash
-              working-directory: ${{runner.workspace}}/Stellarator-Tools/LIBSTELL/.github/scripts/install_deps
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/LIBSTELL/.github/scripts
+              run: install_deps
             - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
