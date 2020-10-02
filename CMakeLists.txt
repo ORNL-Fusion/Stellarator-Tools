@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 3.14)
 
 project (stellarator_tools)
 
+enable_testing ()
+
 include (FetchContent)
 find_package (Git)
 
@@ -57,15 +59,15 @@ endmacro ()
 #                 project_tag (Default to master)
 #                 SUB) #Optional Sub project directories.
 
-# Register LIBSTELL
-register_project(libstell
-                 LIBSTELL
-                 https://github.com/ORNL-Fusion/LIBSTELL.git
-                 master)
-
 # Register MAKEGRID
 register_project(makegrid
                  MAKEGRID
                  https://github.com/ORNL-Fusion/MAKEGRID.git
                  master
                  LIBSTELL)
+
+# Register LIBSTELL
+register_project(libstell
+                 LIBSTELL
+                 https://github.com/ORNL-Fusion/LIBSTELL.git
+                 master)
