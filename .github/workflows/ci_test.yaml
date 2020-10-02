@@ -1,4 +1,4 @@
-name: Continous Integration Test
+name: Continuous Integration Test
 on:
     workflow_dispatch:
 jobs:
@@ -21,9 +21,6 @@ jobs:
                 sudo apt-get install libnetcdf-dev
                 sudo apt-get install libnetcdff-dev
                 sudo apt-get install libopenmpi-dev
-            - name: Check install
-              shell: bash
-              run: ls /usr/include
             - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
