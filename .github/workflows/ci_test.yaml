@@ -21,10 +21,11 @@ jobs:
                 sudo apt-get install libnetcdf-dev
                 sudo apt-get install libnetcdff-dev
                 sudo apt-get install libopenmpi-dev
+                sudo apt-get install libscalapack-openmpi-dev
             - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
-              run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE=Release -DBUILD_MAKEGRID=ON -DBUILD_TAG_LIBSTELL=master_dev -DBUILD_TAG_MAKEGRID=master_dev -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
+              run: cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE=Release -DBUILD_PARVMEC=ON -DBUILD_TAG_LIBSTELL=master_dev -DBUILD_TAG_MAKEGRID=master_dev -DBUILD_TAG_PARVMEC=master_dev -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
             - name: Build
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
