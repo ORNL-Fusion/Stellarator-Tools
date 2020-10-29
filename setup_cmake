@@ -8,7 +8,7 @@ BUILD_TYPE=Release
 
 MACHINE_ID=`uname -n`
 
-echo Building v3fit suite for machine $MACHINE_ID
+echo Building stellarator tools for machine $MACHINE_ID
 echo
 
 if [ $# -eq 1 ]
@@ -37,6 +37,19 @@ then
     # Config for Mark Cianciosa's ORNL machine.
     cmake -DCMAKE_BUILD_TYPE:String=$BUILD_TYPE \
           -DBUILD_MAKEGRID=ON                   \
+          ../
+
+elif [ $MACHINE_ID == "Nebuchadnezaar" ]
+then
+    # Config for Jonathan Schilling's laptop running Arch Linux.
+    # -fallow-argument-mismatch is needed for GCC-10.
+    cmake -DCMAKE_BUILD_TYPE:String=$BUILD_TYPE           \
+          -DBUILD_PARVMEC=ON                              \
+          -DBUILD_MAKEGRID=ON                             \
+          -DBUILD_TAG_LIBSTELL=experimental_vmec10        \
+          -DBUILD_TAG_MAKEGRID=master_dev                 \
+          -DBUILD_TAG_PARVMEC=experimental_vmec10         \
+          -DCMAKE_Fortran_FLAGS=-fallow-argument-mismatch \
           ../
 
 else
