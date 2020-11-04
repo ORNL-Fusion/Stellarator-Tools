@@ -39,9 +39,10 @@ then
           -DBUILD_MAKEGRID=ON                   \
           ../
 
-elif [ $MACHINE_ID == "Nebuchadnezaar" ]
+elif [ $MACHINE_ID == "Nebuchadnezaar" ] || \
+     [ $MACHINE_ID == "Z820" ]
 then
-    # Config for Jonathan Schilling's laptop running Arch Linux.
+    # Config for Jonathan Schilling's Arch Linux machines.
     # -fallow-argument-mismatch is needed for GCC-10.
     cmake -DCMAKE_BUILD_TYPE:String=$BUILD_TYPE           \
           -DBUILD_PARVMEC=ON                              \
