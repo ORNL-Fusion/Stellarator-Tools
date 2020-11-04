@@ -64,6 +64,7 @@ register_project(parvmec
                  PARVMEC
                  https://github.com/ORNL-Fusion/PARVMEC.git
                  master
+                 MAKEGRID
                  LIBSTELL)
 
 # Register MAKEGRID
