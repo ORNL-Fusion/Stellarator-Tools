@@ -9,11 +9,11 @@ find_package (Git)
 
 option (USE_SSH "Use ssh to access git repos" OFF)
 
-if ($USE_SSH)
+if (${USE_SSH})
     set (URL_PROTOCOL "git@")
-else
+else ()
     set (URL_PROTOCOL "https://")
-endif
+endif ()
 
 #  Define a macro to register new projects.
 macro (register_project name dir url default_tag)
