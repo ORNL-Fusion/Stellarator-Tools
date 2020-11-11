@@ -70,12 +70,12 @@ register_project(parvmec
 # Register MAKEGRID
 register_project(makegrid
                  MAKEGRID
-                 git@github.com/ORNL-Fusion/MAKEGRID.git
+                 git@github.com:ORNL-Fusion/MAKEGRID.git
                  master_dev
                  LIBSTELL)
 
 # Register LIBSTELL
 register_project(libstell
                  LIBSTELL
-                 git@github.com/ORNL-Fusion/LIBSTELL.git
+                 git@github.com:ORNL-Fusion/LIBSTELL.git
                  experimental_vmec10)
