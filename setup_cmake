@@ -45,6 +45,7 @@ then
     # Config for Jonathan Schilling's Arch Linux machines.
     # -fallow-argument-mismatch is needed for GCC-10.
     cmake -DCMAKE_BUILD_TYPE:String=$BUILD_TYPE           \
+          -DUSE_SSH=ON                                    \
           -DBUILD_PARVMEC=ON                              \
           -DCMAKE_Fortran_FLAGS=-fallow-argument-mismatch \
           ../

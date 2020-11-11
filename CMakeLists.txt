@@ -7,6 +7,14 @@ enable_testing ()
 include (FetchContent)
 find_package (Git)
 
+option (USE_SSH "Use ssh to access git repos" OFF)
+
+if ($USE_SSH)
+    set (URL_PROTOCOL "git@")
+else
+    set (URL_PROTOCOL "https://")
+endif
+
 #  Define a macro to register new projects.
 macro (register_project name dir url default_tag)
     option (BUILD_${dir} "Build ${name} subproject." OFF)
@@ -62,7 +70,7 @@ endmacro ()
 # Register PARVMEC
 register_project(parvmec
                  PARVMEC
-                 git@github.com:ORNL-Fusion/PARVMEC.git
+                 ${URL_PROTOCOL}github.com:ORNL-Fusion/PARVMEC.git
                  experimental_vmec10
 #                 MAKEGRID
                  LIBSTELL)
@@ -70,12 +78,13 @@ register_project(parvmec
 # Register MAKEGRID
 register_project(makegrid
                  MAKEGRID
-                 git@github.com:ORNL-Fusion/MAKEGRID.git
+                 ${URL_PROTOCOL}github.com:ORNL-Fusion/MAKEGRID.git
                  master_dev
                  LIBSTELL)
 
 # Register LIBSTELL
 register_project(libstell
                  LIBSTELL
-                 git@github.com:ORNL-Fusion/LIBSTELL.git
-                 experimental_vmec10)
+                 ${URL_PROTOCOL}github.com:ORNL-Fusion/LIBSTELL.git
+                 experimental_vmec10
+                 )
