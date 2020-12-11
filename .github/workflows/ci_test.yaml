@@ -18,6 +18,7 @@ jobs:
             - name: Install Libraries
               shell: bash
               run: |
+                sudo apt update
                 sudo apt-get install libnetcdf-dev
                 sudo apt-get install libnetcdff-dev
                 sudo apt-get install libopenmpi-dev
