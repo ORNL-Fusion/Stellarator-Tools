@@ -35,3 +35,7 @@ jobs:
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
               run: make test
+            - name: Show Log
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build/Testing/Temporary
+              run: cat LastTest.log
