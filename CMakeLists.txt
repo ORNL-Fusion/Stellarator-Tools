@@ -59,6 +59,14 @@ endmacro ()
 #                 project_tag (Default to master)
 #                 SUB) #Optional Sub project directories.
 
+# Register PARVMEC
+register_project(parvmec
+                 PARVMEC
+                 https://github.com/ORNL-Fusion/PARVMEC.git
+                 master
+                 MAKEGRID
+                 LIBSTELL)
+
 # Register MAKEGRID
 register_project(makegrid
                  MAKEGRID
