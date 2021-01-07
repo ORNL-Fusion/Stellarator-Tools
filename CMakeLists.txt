@@ -70,7 +70,7 @@ endmacro ()
 register_project(parvmec
                  PARVMEC
                  ${URL_PROTOCOL}github.com:ORNL-Fusion/PARVMEC.git
-                 master_dev
+                 master
                  MAKEGRID
                  LIBSTELL)
 
@@ -78,13 +78,13 @@ register_project(parvmec
 register_project(makegrid
                  MAKEGRID
                  ${URL_PROTOCOL}github.com:ORNL-Fusion/MAKEGRID.git
-                 master_dev
+                 master
                  LIBSTELL)
 
 # Register LIBSTELL
 register_project(libstell
                  LIBSTELL
                  ${URL_PROTOCOL}github.com:ORNL-Fusion/LIBSTELL.git
-                 master_dev
+                 master
                  )
 
