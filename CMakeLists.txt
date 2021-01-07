@@ -7,6 +7,13 @@ enable_testing ()
 include (FetchContent)
 find_package (Git)
 
+option (USE_SSH "Use ssh to access git repos" OFF)
+if (${USE_SSH})
+    set (URL_BASE "git@github.com:")
+else ()
+    set (URL_BASE "https://github.com/")
+endif ()
+
 #  Define a macro to register new projects.
 macro (register_project name dir url default_tag)
     option (BUILD_${dir} "Build ${name} subproject." OFF)
@@ -32,7 +39,7 @@ macro (register_project name dir url default_tag)
             )
 
 #  Add a taraget to pull the latest version before building. Note dependency is
-#  registered in the sub project CMakeList.txt. Not sue how this should handel
+#  registered in the sub project CMakeList.txt. Not sure how this should handle
 #  multiple targets in a project yet. Name must match the subproject pull_
 #  dependency.
             add_custom_target(
@@ -43,7 +50,7 @@ macro (register_project name dir url default_tag)
             )
         endif ()
 
-# Any thing after the the tag is assumed to be a project dependency.
+# Anything after the the tag is assumed to be a project dependency.
         set (depends "${ARGN}")
         foreach (project IN LISTS depends)
             set (BUILD_${project} ON)
@@ -52,7 +59,7 @@ macro (register_project name dir url default_tag)
 endmacro ()
 
 #  Registers the projects. By specifying a name, directory, git url, tag and
-#  option dependencies.
+#  optional dependencies.
 #register_project(example_project
 #                 PROJECT_DIR
 #                 https://url.to.project
@@ -62,7 +69,7 @@ endmacro ()
 # Register PARVMEC
 register_project(parvmec
                  PARVMEC
-                 https://github.com/ORNL-Fusion/PARVMEC.git
+                 ${URL_BASE}ORNL-Fusion/PARVMEC.git
                  master
                  MAKEGRID
                  LIBSTELL)
@@ -70,12 +77,14 @@ register_project(parvmec
 # Register MAKEGRID
 register_project(makegrid
                  MAKEGRID
-                 https://github.com/ORNL-Fusion/MAKEGRID.git
+                 ${URL_BASE}ORNL-Fusion/MAKEGRID.git
                  master
                  LIBSTELL)
 
 # Register LIBSTELL
 register_project(libstell
                  LIBSTELL
-                 https://github.com/ORNL-Fusion/LIBSTELL.git
-                 master)
+                 ${URL_BASE}ORNL-Fusion/LIBSTELL.git
+                 master
+                 )
+
