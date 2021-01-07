@@ -9,9 +9,9 @@ find_package (Git)
 
 option (USE_SSH "Use ssh to access git repos" OFF)
 if (${USE_SSH})
-    set (URL_PROTOCOL "git@")
+    set (URL_BASE "git@github.com:")
 else ()
-    set (URL_PROTOCOL "https://")
+    set (URL_BASE "https://github.com/")
 endif ()
 
 #  Define a macro to register new projects.
@@ -69,7 +69,7 @@ endmacro ()
 # Register PARVMEC
 register_project(parvmec
                  PARVMEC
-                 ${URL_PROTOCOL}github.com:ORNL-Fusion/PARVMEC.git
+                 ${URL_BASE}ORNL-Fusion/PARVMEC.git
                  master
                  MAKEGRID
                  LIBSTELL)
@@ -77,14 +77,14 @@ register_project(parvmec
 # Register MAKEGRID
 register_project(makegrid
                  MAKEGRID
-                 ${URL_PROTOCOL}github.com:ORNL-Fusion/MAKEGRID.git
+                 ${URL_BASE}ORNL-Fusion/MAKEGRID.git
                  master
                  LIBSTELL)
 
 # Register LIBSTELL
 register_project(libstell
                  LIBSTELL
-                 ${URL_PROTOCOL}github.com:ORNL-Fusion/LIBSTELL.git
+                 ${URL_BASE}ORNL-Fusion/LIBSTELL.git
                  master
                  )
 
