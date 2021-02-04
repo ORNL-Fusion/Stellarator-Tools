@@ -66,6 +66,13 @@ endmacro ()
 #                 project_tag (Default to master)
 #                 SUB) #Optional Sub project directories.
 
+# Register DESCUR
+register_project(descur
+                 DESCUR
+                 ${URL_BASE}ORNL-Fusion/DESCUR.git
+                 master
+                 LIBSTELL)
+
 # Register PARVMEC
 register_project(parvmec
                  PARVMEC
