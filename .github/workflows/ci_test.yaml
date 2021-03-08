@@ -2,7 +2,7 @@ name: Continuous Integration Test
 on:
     workflow_dispatch:
     schedule:
-        -cron: 0 1 * * *
+        - cron: '0 1 * * *'
 jobs:
     ci_test:
         runs-on: ubuntu-latest
