@@ -68,6 +68,13 @@ endmacro ()
 #                 project_tag (Default to master)
 #                 SUB) #Optional Sub project directories.
 
+# Register BMW
+register_project(bmw
+                 BMW
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/BMW.git
+                 master
+                 LIBSTELL)
+
 # Register DESCUR
 register_project(descur
                  DESCUR
