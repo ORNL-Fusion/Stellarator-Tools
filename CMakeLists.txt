@@ -73,7 +73,7 @@ register_project(surface
                  SURFACE
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SURFACE.git
                  master
-                 SURFACE)
+                 BMW)
 
 # Register BMW
 register_project(bmw
