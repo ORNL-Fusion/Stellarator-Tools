@@ -8,6 +8,7 @@ subprojects are.
 * [DESCUR](https://github.com/ORNL-Fusion/DESCUR)
 * [BMW](https://github.com/ORNL-Fusion/BMW) Bio-savart Magnetic VMEC Vector potential.
 * [SURFACE](https://github.com/ORNL-Fusion/SURFACE) Compute vector potential at firstwall surfaces. 
+* [LGRID](https://github.com/ORNL-Fusion/LGRID) Limiter grid preprocessor. 
 
 #  Documentation
 * [VMEC-internals](https://github.com/jonathanschilling/vmec-internals) Some VMEC-internal documentation
