@@ -68,6 +68,13 @@ endmacro ()
 #                 project_tag (Default to master)
 #                 SUB) #Optional Sub project directories.
 
+# Register SURFACE
+register_project(surface
+                 SURFACE
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SURFACE.git
+                 master
+                 BMW)
+
 # Register BMW
 register_project(bmw
                  BMW
