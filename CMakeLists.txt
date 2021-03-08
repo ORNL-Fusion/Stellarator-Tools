@@ -69,7 +69,7 @@ endmacro ()
 #                 SUB) #Optional Sub project directories.
 
 # Register BMW
-register_project(descur
+register_project(bmw
                  BMW
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/BMW.git
                  master
