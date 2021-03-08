@@ -73,7 +73,7 @@ register_project(lgrid
                  LGRID
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/LGRID.git
                  master
-                 )
+                 LIBSTELL)
 
 # Register SURFACE
 register_project(surface
