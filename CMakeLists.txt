@@ -73,7 +73,8 @@ register_project(siesta
                  SIESTA
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SIESTA.git
                  master
-                 PARVMEC)
+                 PARVMEC
+                 BMW)
 
 # Register LGRID
 register_project(lgrid
