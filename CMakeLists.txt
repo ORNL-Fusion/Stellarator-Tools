@@ -68,6 +68,14 @@ endmacro ()
 #                 project_tag (Default to master)
 #                 SUB) #Optional Sub project directories.
 
+# Refister SIESTA
+register_project(siesta
+                 SIESTA
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SIESTA.git
+                 master
+                 PARVMEC
+                 BMW)
+
 # Register LGRID
 register_project(lgrid
                  LGRID

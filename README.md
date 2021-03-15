@@ -9,6 +9,10 @@ subprojects are.
 * [BMW](https://github.com/ORNL-Fusion/BMW) Bio-savart Magnetic VMEC Vector potential.
 * [SURFACE](https://github.com/ORNL-Fusion/SURFACE) Compute vector potential at firstwall surfaces. 
 * [LGRID](https://github.com/ORNL-Fusion/LGRID) Limiter grid preprocessor. 
+* [SIESTA](https://github.com/ORNL-Fusion/SIESTA) 3D Equilibrium solver with islands.
 
 #  Documentation
 * [VMEC-internals](https://github.com/jonathanschilling/vmec-internals) Some VMEC-internal documentation
+
+# Testing
+[![Continuous Integration Test](https://github.com/ORNL-Fusion/Stellarator-Tools/actions/workflows/ci_test.yaml/badge.svg?branch=master&event=schedule)](https://github.com/ORNL-Fusion/Stellarator-Tools/actions/workflows/ci_test.yaml)
