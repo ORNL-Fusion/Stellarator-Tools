@@ -68,9 +68,9 @@ endmacro ()
 #                 project_tag (Default to master)
 #                 SUB) #Optional Sub project directories.
 
-# Register V3RFUN
-register_project(v3rfun
-                 V3RFUN
+# Register V3FIT
+register_project(v3fit
+                 V3FIT
                  ${URL_PROTO}github.com${URL_SEP}cianciosa/V3FIT.git
                  master
                  SIESTA
