@@ -71,6 +71,15 @@ endmacro ()
 # Register V3RFUN
 register_project(v3rfun
                  V3RFUN
+                 ${URL_PROTO}github.com${URL_SEP}cianciosa/V3FIT.git
+                 master
+                 SIESTA
+                 V3RFUN
+                 LGRID)
+
+# Register V3RFUN
+register_project(v3rfun
+                 V3RFUN
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/V3RFUN.git
                  master
                  LIBSTELL)
