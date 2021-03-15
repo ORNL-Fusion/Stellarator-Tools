@@ -68,7 +68,14 @@ endmacro ()
 #                 project_tag (Default to master)
 #                 SUB) #Optional Sub project directories.
 
-# Refister SIESTA
+# Register V3RFUN
+register_project(v3rfun
+                 V3RFUN
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/V3RFUN.git
+                 master
+                 LIBSTELL)
+
+# Register SIESTA
 register_project(siesta
                  SIESTA
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SIESTA.git
