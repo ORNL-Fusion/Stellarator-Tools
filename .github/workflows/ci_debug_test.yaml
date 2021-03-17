@@ -2,7 +2,7 @@ name: Continuous Integration Test
 on:
     workflow_dispatch:
     schedule:
-        - cron: '0 1 * * *'
+        - cron: '0 1 * * 0'
 jobs:
     ci_test:
         runs-on: ubuntu-latest
@@ -28,7 +28,7 @@ jobs:
             - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
-              run: cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DBUILD_TAG_V3FIT=master_dev -DBUILD_TAG_V3RFUN=master_dev -DBUILD_TAG_SIESTA=master_dev -DBUILD_TAG_LGRID=master_dev -DBUILD_TAG_SURFACE=master_dev -DBUILD_TAG_BMW=master_dev -DBUILD_TAG_LIBSTELL=master_dev -DBUILD_TAG_MAKEGRID=master_dev -DBUILD_TAG_PARVMEC=master_dev -DBUILD_TAG_DESCUR=master_dev -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
+              run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_DEBUG_FLAGS="-ffpe-trap=denormal -fsanitize=address" -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DBUILD_TAG_V3FIT=master_dev -DBUILD_TAG_V3RFUN=master_dev -DBUILD_TAG_SIESTA=master_dev -DBUILD_TAG_LGRID=master_dev -DBUILD_TAG_SURFACE=master_dev -DBUILD_TAG_BMW=master_dev -DBUILD_TAG_LIBSTELL=master_dev -DBUILD_TAG_MAKEGRID=master_dev -DBUILD_TAG_PARVMEC=master_dev -DBUILD_TAG_DESCUR=master_dev -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
             - name: Build
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
