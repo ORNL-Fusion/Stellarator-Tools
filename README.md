@@ -11,6 +11,7 @@ subprojects are.
 * [LGRID](https://github.com/ORNL-Fusion/LGRID) Limiter grid preprocessor. 
 * [SIESTA](https://github.com/ORNL-Fusion/SIESTA) 3D Equilibrium solver with islands.
 * [V3RFUN](https://github.com/ORNL-Fusion/V3RFUN) Magnetic diagnostic responce functions.
+* [V3FIT](https://github.com/cianciosa/V3FIT) 3D Equilibrium Reconstruction
 
 #  Documentation
 * [VMEC-internals](https://github.com/jonathanschilling/vmec-internals) Some VMEC-internal documentation
