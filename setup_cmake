@@ -54,7 +54,7 @@ elif [[ $MACHINE_ID = raven* ]]
 then
     # Config for Raven cluster at MPCDF in Garching.
     # For details, see https://docs.mpcdf.mpg.de/doc/computing/raven-user-guide.html  .
-    # module load git gcc openmpi hdf5-serial netcdf-serial
+    # module load git gcc openmpi hdf5-serial netcdf-serial mkl
     cmake -DCMAKE_BUILD_TYPE:String=$BUILD_TYPE             \
 	  -DCMAKE_C_COMPILER=$GCC_HOME/bin/gcc              \
 	  -DCMAKE_CXX_COMPILER=$GCC_HOME/bin/g++            \
