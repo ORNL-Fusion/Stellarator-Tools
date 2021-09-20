@@ -44,10 +44,18 @@ elif [ $MACHINE_ID == "Nebuchadnezaar" ] || \
 then
     # Config for Jonathan Schilling's Arch Linux machines.
     # -fallow-argument-mismatch is needed for GCC-10.
-    cmake -DCMAKE_BUILD_TYPE:String=$BUILD_TYPE           \
-          -DUSE_SSH=ON                                    \
-          -DBUILD_PARVMEC=ON                              \
-          -DCMAKE_Fortran_FLAGS=-fallow-argument-mismatch \
+    cmake -DCMAKE_BUILD_TYPE:String=$BUILD_TYPE             \
+          -DUSE_SSH=ON                                      \
+          -DBUILD_PARVMEC=ON                                \
+          -DCMAKE_Fortran_FLAGS="-fallow-argument-mismatch" \
+          ../
+
+elif [ $MACHINE_ID == "sv-e5-da-1" ]
+then
+    # Config for J. Schilling's IPP machine.
+    cmake -DCMAKE_BUILD_TYPE:String=$BUILD_TYPE             \
+          -DUSE_SSH=ON                                      \
+          -DBUILD_PARVMEC=ON                                \
           ../
 
 else
