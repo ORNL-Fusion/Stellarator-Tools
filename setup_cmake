@@ -47,8 +47,26 @@ then
     cmake -DCMAKE_BUILD_TYPE:String=$BUILD_TYPE           \
           -DUSE_SSH=ON                                    \
           -DBUILD_PARVMEC=ON                              \
-          -DCMAKE_Fortran_FLAGS=-fallow-argument-mismatch \
+          -DCMAKE_Fortran_FLAGS="-fallow-argument-mismatch" \
           ../
+
+elif [[ $MACHINE_ID = raven* ]]
+then
+    # Config for Raven cluster at MPCDF in Garching.
+    # For details, see https://docs.mpcdf.mpg.de/doc/computing/raven-user-guide.html  .
+    # module load git gcc openmpi hdf5-serial netcdf-serial mkl
+    cmake -DCMAKE_BUILD_TYPE:String=$BUILD_TYPE             \
+	  -DCMAKE_C_COMPILER=$GCC_HOME/bin/gcc              \
+	  -DCMAKE_CXX_COMPILER=$GCC_HOME/bin/g++            \
+	  -DCMAKE_Fortran_COMPILER=$OPENMPI_HOME/bin/mpif90 \
+	  -DNetCDF_C_INCLUDE_DIR=$NETCDF_HOME/include       \
+	  -DNetCDF_Fortran_INCLUDE_DIR=$NETCDF_HOME/include \
+	  -DNetCDF_C_LIBRARY=$NETCDF_HOME/lib/libnetcdf.so  \
+	  -DNetCDF_Fortran_LIBRARY=$NETCDF_HOME/lib/libnetcdff.so \
+	  -DSCALAPACK_LIBRARY="${MKL_HOME}/lib/intel64/libmkl_scalapack_ilp64.a" \
+	  -DBLAS_LIBRARIES="-Wl,--start-group ${MKL_HOME}/lib/intel64/libmkl_gf_ilp64.a ${MKL_HOME}/lib/intel64/libmkl_gnu_thread.a ${MKL_HOME}/lib/intel64/libmkl_core.a ${MKL_HOME}/lib/intel64/libmkl_blacs_intelmpi_ilp64.a -Wl,--end-group -lgomp -lpthread -lm -ldl" \
+          -DBUILD_PARVMEC=ON                                \
+	  ../
 
 else
 # MACHINE_ID is new and unknown. Inform the user how to add support for this new machine.
