@@ -7,6 +7,22 @@ enable_testing ()
 include (FetchContent)
 find_package (Git)
 
+
+#-------------------------------------------------------------------------------
+#  Setup build types.
+#-------------------------------------------------------------------------------
+set_property (CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+              Debug
+              Release
+              Sanitized
+)
+
+#  Make sure the prefix path appears as a ccmake variable.
+set (CMAKE_PREFIX_PATH "" CACHE PATH "Search paths for dependency look up.")
+
+#-------------------------------------------------------------------------------
+#  Setup access method.
+#-------------------------------------------------------------------------------
 option (USE_SSH "Use ssh to access git repos" OFF)
 if (${USE_SSH})
     set (URL_PROTO "git@")
@@ -16,7 +32,9 @@ else ()
     set (URL_SEP "/")
 endif ()
 
+#-------------------------------------------------------------------------------
 #  Define a macro to register new projects.
+#-------------------------------------------------------------------------------
 macro (register_project name dir url default_tag)
     option (BUILD_${dir} "Build ${name} subproject." OFF)
     set (BUILD_TAG_${dir} ${default_tag} CACHE STRING "Name of the tag to checkout.")
@@ -55,18 +73,21 @@ macro (register_project name dir url default_tag)
 # Anything after the the tag is assumed to be a project dependency.
         set (depends "${ARGN}")
         foreach (project IN LISTS depends)
-            set (BUILD_${project} ON)
+            set (BUILD_${project} ON CACHE BOOL "Build ${project}" FORCE)
         endforeach ()
     endif ()
 endmacro ()
 
+#-------------------------------------------------------------------------------
 #  Registers the projects. By specifying a name, directory, git url, tag and
 #  optional dependencies.
-#register_project(example_project
-#                 PROJECT_DIR
-#                 https://url.to.project
-#                 project_tag (Default to master)
-#                 SUB) #Optional Sub project directories.
+#
+#  register_project(example_project
+#                   PROJECT_DIR
+#                   https://url.to.project
+#                   project_tag (Default to master)
+#                   SUB) #Optional Sub project directories.
+#-------------------------------------------------------------------------------
 
 # Register V3FIT
 register_project(v3fit
