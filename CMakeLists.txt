@@ -14,7 +14,6 @@ find_package (Git)
 set_property (CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
               Debug
               Release
-              Sanitized
 )
 
 #  Make sure the prefix path appears as a ccmake variable.
@@ -160,6 +159,4 @@ register_project(makegrid
 register_project(libstell
                  LIBSTELL
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/LIBSTELL.git
-                 master
-                 )
-
+                 master)
