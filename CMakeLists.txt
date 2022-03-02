@@ -88,6 +88,12 @@ endmacro ()
 #                   SUB) #Optional Sub project directories.
 #-------------------------------------------------------------------------------
 
+register_project(booz_xform
+                 BOOZ_XFORM
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/BOOZ_XFORM.git
+                 master
+                 LIBSTELL)
+
 # Register V3FIT
 register_project(v3fit
                  V3FIT
