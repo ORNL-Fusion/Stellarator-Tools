@@ -12,6 +12,7 @@ subprojects are.
 * [SIESTA](https://github.com/ORNL-Fusion/SIESTA) 3D Equilibrium solver with islands.
 * [V3RFUN](https://github.com/ORNL-Fusion/V3RFUN) Magnetic diagnostic responce functions.
 * [V3FIT](https://github.com/cianciosa/V3FIT) 3D Equilibrium Reconstruction
+* [BOOZ_XFORM](https://github.com/ORNL-Fusion/BOOZ_XFORM.git) Convert VMEC coordinates to Boozer coordinates.
 
 #  Documentation
 * [VMEC-internals](https://github.com/jonathanschilling/vmec-internals) Some VMEC-internal documentation
