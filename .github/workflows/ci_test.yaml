@@ -7,6 +7,9 @@ jobs:
     ci_test:
         runs-on: ubuntu-latest
         steps:
+            - name: CPU Info
+              shell: bash
+              run: awk '{if ($0=="") exit; print $0}' /proc/cpuinfo
             - name: Clone Repo
               shell: bash
               working-directory: ${{runner.workspace}}
@@ -28,7 +31,7 @@ jobs:
             - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
-              run: cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DBUILD_TAG_V3FIT=master_dev -DBUILD_TAG_V3RFUN=master_dev -DBUILD_TAG_SIESTA=master_dev -DBUILD_TAG_LGRID=master_dev -DBUILD_TAG_SURFACE=master_dev -DBUILD_TAG_BMW=master_dev -DBUILD_TAG_LIBSTELL=master_dev -DBUILD_TAG_MAKEGRID=master_dev -DBUILD_TAG_PARVMEC=master_dev -DBUILD_TAG_DESCUR=master_dev -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
+              run: cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DBUILD_TAG_BOOZ_XFORM=master_dev -DBUILD_TAG_V3FIT=master_dev -DBUILD_TAG_V3RFUN=master_dev -DBUILD_TAG_SIESTA=master_dev -DBUILD_TAG_LGRID=master_dev -DBUILD_TAG_SURFACE=master_dev -DBUILD_TAG_BMW=master_dev -DBUILD_TAG_LIBSTELL=master_dev -DBUILD_TAG_MAKEGRID=master_dev -DBUILD_TAG_PARVMEC=master_dev -DBUILD_TAG_DESCUR=master_dev -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
             - name: Build
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
