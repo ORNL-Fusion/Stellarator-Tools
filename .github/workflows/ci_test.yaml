@@ -1,26 +1,43 @@
 name: Continuous Integration Test
 on:
     workflow_dispatch:
-    schedule:
-        - cron: '0 1 * * *'
+    push:
+    pull_request:
 jobs:
     ci_test:
-        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                os: [macos-latest, unbuntu-latest]
+                mode: [Release, Debug]
+                branch: [master, master_dev]
+        runs-on: ${{matrix.os}}
         steps:
-            - name: CPU Info
-              shell: bash
+            - name: CPU Info Mac
+              if: ${{matrix.os == 'macos-latest'}}
+              run: |
+                sysctl -n machdep.cpu.brand_string
+                sysctl -n machdep.cpu.features
+                (echo "Number of Cores:"; sysctl -n machdep.cpu.core_count) |tr '\n' '\t' && echo ''
+            - name: CPU Info Linux
+              if: ${{matrix.os == 'unbuntu-latest'}}
               run: awk '{if ($0=="") exit; print $0}' /proc/cpuinfo
             - name: Clone Repo
               shell: bash
               working-directory: ${{runner.workspace}}
               run: git clone https://github.com/ORNL-Fusion/Stellarator-Tools.git ${{runner.workspace}}/Stellarator-Tools
-            - name: Checkout Branch
-              shell: bash
-              working-directory: ${{runner.workspace}}/Stellarator-Tools/
-              run: git checkout master_dev
             - name: Create build directory.
-              run: cmake -E make_directory ${{runner.workspace}}/Stellarator-Tools/build
-            - name: Install Libraries
+              working-directory: ${{runner.workspace}}/Stellarator-Tools
+              run: cmake -E make_directory build
+            - name: Install Libraries Mac
+              if: ${{matrix.os == 'macos-latest'}}
+              shell: bash
+              run: |
+                brew install netcdf
+                brew install netcdf-fortran
+                brew install open-mpi
+                brew install scalapack
+            - name: Install Libraries Linux
+              if: ${{matrix.os == 'unbuntu-latest'}}
               shell: bash
               run: |
                 sudo apt update
@@ -28,10 +45,16 @@ jobs:
                 sudo apt-get install libnetcdff-dev
                 sudo apt-get install libopenmpi-dev
                 sudo apt-get install libscalapack-openmpi-dev
-            - name: Configure CMake
+            - name: Configure CMake Mac
+              if: ${{matrix.os == 'macos-latest'}}
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
-              run: cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DBUILD_TAG_BOOZ_XFORM=master_dev -DBUILD_TAG_V3FIT=master_dev -DBUILD_TAG_V3RFUN=master_dev -DBUILD_TAG_SIESTA=master_dev -DBUILD_TAG_LGRID=master_dev -DBUILD_TAG_SURFACE=master_dev -DBUILD_TAG_BMW=master_dev -DBUILD_TAG_LIBSTELL=master_dev -DBUILD_TAG_MAKEGRID=master_dev -DBUILD_TAG_PARVMEC=master_dev -DBUILD_TAG_DESCUR=master_dev -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
+              run: cmake -DCMAKE_BUILD_TYPE=${{matrix.mode}} -DCMAKE_Fortran_COMPILER=/usr/local/opt/gfortran/bin/gfortran -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DBUILD_TAG_BOOZ_XFORM=${{matrix.branch}} -DBUILD_TAG_V3FIT=${{matrix.branch}} -DBUILD_TAG_V3RFUN=${{matrix.branch}} -DBUILD_TAG_SIESTA=${{matrix.branch}} -DBUILD_TAG_LGRID=${{matrix.branch}} -DBUILD_TAG_SURFACE=${{matrix.branch}} -DBUILD_TAG_BMW=${{matrix.branch}} -DBUILD_TAG_LIBSTELL=${{matrix.branch}} -DBUILD_TAG_MAKEGRID=${{matrix.branch}} -DBUILD_TAG_PARVMEC=${{matrix.branch}} -DBUILD_TAG_DESCUR=${{matrix.branch}} -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
+            - name: Configure CMake Linux
+              if: ${{matrix.os == 'unbuntu-latest'}}
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build
+              run: cmake -DCMAKE_BUILD_TYPE=${{matrix.mode}} -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DBUILD_TAG_BOOZ_XFORM=${{matrix.branch}} -DBUILD_TAG_V3FIT=${{matrix.branch}} -DBUILD_TAG_V3RFUN=${{matrix.branch}} -DBUILD_TAG_SIESTA=${{matrix.branch}} -DBUILD_TAG_LGRID=${{matrix.branch}} -DBUILD_TAG_SURFACE=${{matrix.branch}} -DBUILD_TAG_BMW=${{matrix.branch}} -DBUILD_TAG_LIBSTELL=${{matrix.branch}} -DBUILD_TAG_MAKEGRID=${{matrix.branch}} -DBUILD_TAG_PARVMEC=${{matrix.branch}} -DBUILD_TAG_DESCUR=${{matrix.branch}} -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
             - name: Build
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
