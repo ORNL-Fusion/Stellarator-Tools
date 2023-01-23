@@ -18,5 +18,4 @@ subprojects are.
 * [VMEC-internals](https://github.com/jonathanschilling/vmec-internals) Some VMEC-internal documentation
 
 # Testing
-[![Continuous Integration Test](https://github.com/ORNL-Fusion/Stellarator-Tools/actions/workflows/ci_test.yaml/badge.svg?branch=master&event=schedule)](https://github.com/ORNL-Fusion/Stellarator-Tools/actions/workflows/ci_test.yaml)
-[![Continuous Integration Debug Test](https://github.com/ORNL-Fusion/Stellarator-Tools/actions/workflows/ci_debug_test.yaml/badge.svg)](https://github.com/ORNL-Fusion/Stellarator-Tools/actions/workflows/ci_debug_test.yaml)
+[![Continuous Integration Test](https://github.com/ORNL-Fusion/Stellarator-Tools/actions/workflows/ci_test.yaml/badge.svg)](https://github.com/ORNL-Fusion/Stellarator-Tools/actions/workflows/ci_test.yaml)
