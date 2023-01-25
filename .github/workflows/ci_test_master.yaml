@@ -6,7 +6,7 @@ jobs:
     ci_test:
         strategy:
             matrix:
-                os: [macos-latest, unbuntu-latest]
+                os: [macos-latest, ubuntu-latest]
                 mode: [Release, Debug]
         runs-on: ${{matrix.os}}
         steps:
