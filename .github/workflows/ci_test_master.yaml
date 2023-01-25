@@ -17,7 +17,7 @@ jobs:
                 sysctl -n machdep.cpu.features
                 (echo "Number of Cores:"; sysctl -n machdep.cpu.core_count) |tr '\n' '\t' && echo ''
             - name: CPU Info Linux
-              if: ${{matrix.os == 'unbuntu-latest'}}
+              if: ${{matrix.os == 'ubuntu-latest'}}
               run: awk '{if ($0=="") exit; print $0}' /proc/cpuinfo
             - name: Clone Repo
               shell: bash
@@ -35,7 +35,7 @@ jobs:
                 brew install open-mpi
                 brew install scalapack
             - name: Install Libraries Linux
-              if: ${{matrix.os == 'unbuntu-latest'}}
+              if: ${{matrix.os == 'ubuntu-latest'}}
               shell: bash
               run: |
                 sudo apt update
@@ -49,7 +49,7 @@ jobs:
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
               run: cmake -DCMAKE_BUILD_TYPE=${{matrix.mode}} -DCMAKE_Fortran_COMPILER=/usr/local/opt/gfortran/bin/gfortran -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
             - name: Configure CMake Linux
-              if: ${{matrix.os == 'unbuntu-latest'}}
+              if: ${{matrix.os == 'ubuntu-latest'}}
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
               run: cmake -DCMAKE_BUILD_TYPE=${{matrix.mode}} -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
