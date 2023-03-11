@@ -14,10 +14,42 @@ find_package (Git)
 set_property (CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
               Debug
               Release
+              Sanitized
 )
 
 #  Make sure the prefix path appears as a ccmake variable.
 set (CMAKE_PREFIX_PATH "" CACHE PATH "Search paths for dependency look up.")
+
+#-------------------------------------------------------------------------------
+#  Sanitizer options
+#-------------------------------------------------------------------------------
+add_library (sanitizer INTERFACE)
+target_compile_options (sanitizer
+                        INTERFACE
+                        $<$<CONFIG:Sanitized>:-g>
+)
+
+macro (register_sanitizer_option name default)
+    string (TOUPPER ${name} upper_name)
+    
+    option (SANITIZE_${upper_name} "Enable the ${name} sanitizer" ${default})
+
+    target_compile_options (sanitizer
+                            INTERFACE
+                            $<$<CONFIG:Sanitized>:$<$<BOOL:${SANITIZE_${upper_name}}>:-fsanitize=${name}>>
+    )
+    target_link_options (sanitizer
+                         INTERFACE
+                         $<$<CONFIG:Sanitized>:$<$<BOOL:${SANITIZE_${upper_name}}>:-fsanitize=${name}>>
+    )
+endmacro ()
+
+register_sanitizer_option (address ON)
+register_sanitizer_option (leak OFF)
+register_sanitizer_option (memory OFF)
+register_sanitizer_option (thread OFF)
+register_sanitizer_option (undefined ON)
+register_sanitizer_option (float-divide-by-zero ON)
 
 #-------------------------------------------------------------------------------
 #  Setup access method.
