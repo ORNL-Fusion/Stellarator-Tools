@@ -43,9 +43,15 @@ ccmake ../
 
 Initally, there will be no options.
 
-press the `c` key to configure. Once configured, there will be sever option. Different code in the Stellarator Tools suite of code can be configured to be build by toggling the `BUILD_<CODE>` from `off` to `on`. You can also set new options like the `CMAKE_BUILD_TYPE`. 
+![Inital Screen](images/cmake1.png)
+
+press the `c` key to configure. Once configured, there will be sever option. Different code in the Stellarator Tools suite of code can be configured to be build by toggling the `BUILD_<CODE>` from `off` to `on`. The build system will automatically turn on any dependencies. You can also set new options like the `CMAKE_BUILD_TYPE`. 
+
+![Inital Screen](images/cmake2.png)
 
 After changing settings, keep pressing `c` until the `g` option appears.
+
+![Inital Screen](images/cmake3.png)
 
 After hitting `g` option `ccmake` will exit and a `Makefile` will be generated. The codes can be built using the `make` command.
 
