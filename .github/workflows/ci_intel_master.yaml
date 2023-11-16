@@ -34,7 +34,9 @@ jobs:
               if: ${{matrix.compiler == 'intel'}}
               shell: bash
               run: |
-                sudo apt-get install -y intel-oneapi-compiler-shared
+                sudo apt-get install -y intel-oneapi-compiler-shared-2024.0
+                sudo apt-get install -y intel-oneapi-compiler-shared-runtime-2024.0
+                sudo apt-get install -y intel-oneapi-mpi-devel
                 sudo apt-get install -y intel-oneapi-mkl-devel
                 git clone https://github.com/Unidata/netcdf-c.git
                 cd netcdf-c
