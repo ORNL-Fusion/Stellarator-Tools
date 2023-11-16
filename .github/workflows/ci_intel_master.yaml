@@ -29,7 +29,7 @@ jobs:
                 rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
                 sudo echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
                 sudo apt-get update
-                sudo -E apt-cache pkgnames intel | grep intel-oneapi-runtime
+                sudo -E apt-cache pkgnames intel | grep intel-oneapi
             - name: Install Libraries Intel
               if: ${{matrix.compiler == 'intel'}}
               shell: bash
