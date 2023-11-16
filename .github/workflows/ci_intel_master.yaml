@@ -29,15 +29,14 @@ jobs:
                 rm GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
                 sudo echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
                 sudo apt-get update
-                sudo -E apt-cache pkgnames intel | grep intel-oneapi
-            - name: Install Libraries Intel
-              if: ${{matrix.compiler == 'intel'}}
-              shell: bash
-              run: |
                 sudo apt-get install -y intel-oneapi-compiler-shared-2024.0
                 sudo apt-get install -y intel-oneapi-compiler-shared-runtime-2024.0
                 sudo apt-get install -y intel-oneapi-mpi-devel
                 sudo apt-get install -y intel-oneapi-mkl-devel
+            - name: Build Libraries Intel
+              if: ${{matrix.compiler == 'intel'}}
+              shell: bash
+              run: |
                 git clone https://github.com/Unidata/netcdf-c.git
                 cd netcdf-c
                 mkdir build
@@ -54,12 +53,10 @@ jobs:
                 make -j
                 sudo make install
                 ../../
-            - name: Install Libraries OneAPI
+            - name: Build Libraries OneAPI
               if: ${{matrix.compiler == 'oneapi'}}
               shell: bash
               run: |
-                sudo apt-get install -y intel-oneapi-compiler-shared
-                sudo apt-get install -y intel-oneapi-mkl-devel
                 git clone https://github.com/Unidata/netcdf-c.git
                 cd netcdf-c
                 mkdir build
