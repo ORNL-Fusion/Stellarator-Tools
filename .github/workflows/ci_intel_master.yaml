@@ -1,0 +1,63 @@
+name: Continuous Integration Test Intel Master
+on:
+    workflow_dispatch:
+    push:
+jobs:
+    ci_test:
+        strategy:
+            matrix:
+                os: [ubuntu-latest]
+                mode: [Release]
+                compiler: [intel, oneapi]
+        runs-on: ${{matrix.os}}
+        steps:
+            - name: CPU Info
+              if: ${{matrix.os == 'ubuntu-latest'}}
+              run: awk '{if ($0=="") exit; print $0}' /proc/cpuinfo
+            - name: Clone Repo
+              shell: bash
+              working-directory: ${{runner.workspace}}
+              run: git clone https://github.com/ORNL-Fusion/Stellarator-Tools.git ${{runner.workspace}}/Stellarator-Tools
+            - name: Create build directory.
+              working-directory: ${{runner.workspace}}/Stellarator-Tools
+              run: cmake -E make_directory build
+            - name: Install Libraries
+              shell: bash
+              run: |
+                git clone https://github.com/spack/spack.git
+                . spack/share/spack/setup-env.sh
+                spack install intel-oneapi-compilers
+                spack compiler add `spack location -i intel-oneapi-compilers`/compiler/latest/linux/bin/intel64
+                spack compiler add `spack location -i intel-oneapi-compilers`/compiler/latest/linux/bin
+                spack install intel-oneapi-mkl
+                spack install intel-oneapi-mpi
+                spack install netcdf-c%${{matrix.compiler}}
+                spack install netcdf-fortran%${{matrix.compiler}}
+                spack load intel-oneapi-compilers
+                spack load intel-oneapi-mkl
+                spack load intel-oneapi-mpi
+                spack load netcdf-c%${{matrix.compiler}}
+                spack load netcdf-fortran%${{matrix.compiler}}
+            - name: Configure CMake
+              if: ${{matrix.compiler == 'intel'}}
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build
+              run: cmake -DCMAKE_C_COMPILER=icc -DCMAKE_CXX_COMPILER=iccpc -DCMAKE_Fortran_COMPILER=ifort -DCMAKE_BUILD_TYPE=${{matrix.mode}} -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
+            - name: Configure CMake
+              if: ${{matrix.compiler == 'oneapi'}}
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build
+              run: cmake -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx -DCMAKE_Fortran_COMPILER=ifx -DCMAKE_BUILD_TYPE=${{matrix.mode}} -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
+            - name: Build
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build
+              run: make -j VERBOSE=1
+            - name: Test Linux
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build
+              run: make test ARGS=-j2
+            - name: Show Log
+              if: failure()
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build/Testing/Temporary
+              run: cat LastTest.log
