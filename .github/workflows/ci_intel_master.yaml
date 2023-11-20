@@ -33,7 +33,7 @@ jobs:
                                         intel-oneapi-compiler-fortran \
                                         intel-oneapi-mpi-devel \
                                         intel-oneapi-mkl-devel \
-                                        sudo apt-get install libnetcdf-dev
+                                        libnetcdf-dev
                 sudo apt-get clean
             - name: Build Libraries Intel
               if: ${{matrix.compiler == 'intel'}}
