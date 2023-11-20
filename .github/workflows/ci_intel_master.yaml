@@ -50,7 +50,7 @@ jobs:
                 cd netcdf-fortran
                 mkdir build
                 cd build
-                cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=icc -DCMAKE_Fortran_COMPILER=ifort ../
+                cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=icc -DCMAKE_Fortran_COMPILER=ifort -DENABLE_HDF5=OFF ../
                 make -j
                 sudo make install
                 ../../
@@ -71,7 +71,7 @@ jobs:
                 cd netcdf-fortran
                 mkdir build
                 cd build
-                cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=icx -DCMAKE_Fortran_COMPILER=ifx ../
+                cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=icx -DCMAKE_Fortran_COMPILER=ifx -DENABLE_HDF5=OFF ../
                 make -j
                 sudo make install
                 ../../
