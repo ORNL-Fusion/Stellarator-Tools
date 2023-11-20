@@ -21,7 +21,8 @@ jobs:
             - name: Create build directory.
               working-directory: ${{runner.workspace}}/Stellarator-Tools
               run: cmake -E make_directory build
-            - name: Setup Repo
+            - name: Setup Repo Classic
+              if: ${{matrix.compiler == 'classic'}}
               shell: bash
               run: |
                 # download the key to system keyring
@@ -35,7 +36,27 @@ jobs:
                                         intel-oneapi-mkl-devel \
                                         libnetcdf-dev
                 sudo apt-get clean
-                ls /opt/intel/oneapi
+                ls /opt/intel/oneapi/mkl
+                source /opt/intel/oneapi/setvars.sh
+                printenv
+            - name: Setup Repo OneAPI
+              if: ${{matrix.compiler == 'classic'}}
+              shell: bash
+              run: |
+                # download the key to system keyring
+                wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor | sudo tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
+                # add signed entry to apt sources and configure the APT client to use Intel repository:
+                echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+                sudo apt-get update
+                sudo apt-get install -y intel-oneapi-compiler-dpcpp-cpp \
+                                        intel-oneapi-compiler-fortran \
+                                        intel-oneapi-mpi-devel \
+                                        intel-oneapi-mkl-devel \
+                                        libnetcdf-dev
+                sudo apt-get clean
+                ls /opt/intel/oneapi/mkl
+                source /opt/intel/oneapi/setvars.sh
+                printenv
             - name: Build Libraries Intel
               if: ${{matrix.compiler == 'classic'}}
               shell: bash
