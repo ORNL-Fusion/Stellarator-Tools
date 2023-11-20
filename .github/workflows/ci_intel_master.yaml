@@ -8,7 +8,7 @@ jobs:
             matrix:
                 os: [ubuntu-latest]
                 mode: [Release]
-                compiler: [oneapi]
+                compiler: [oneapi, classic]
         runs-on: ${{matrix.os}}
         steps:
             - name: CPU Info
@@ -29,14 +29,15 @@ jobs:
                 # add signed entry to apt sources and configure the APT client to use Intel repository:
                 echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
                 sudo apt-get update
-                sudo apt-get install -y intel-oneapi-compiler-dpcpp-cpp \
+                sudo apt-get install -y intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic \
                                         intel-oneapi-compiler-fortran \
                                         intel-oneapi-mpi-devel \
                                         intel-oneapi-mkl-devel \
                                         libnetcdf-dev
                 sudo apt-get clean
+                ls /opt/intel/oneapi
             - name: Build Libraries Intel
-              if: ${{matrix.compiler == 'intel'}}
+              if: ${{matrix.compiler == 'classic'}}
               shell: bash
               run: |
                 source /opt/intel/oneapi/setvars.sh
@@ -60,7 +61,7 @@ jobs:
                 make -j
                 sudo make install
             - name: Configure CMake Intel
-              if: ${{matrix.compiler == 'intel'}}
+              if: ${{matrix.compiler == 'classic'}}
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
               run: |
