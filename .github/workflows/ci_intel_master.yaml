@@ -52,14 +52,6 @@ jobs:
               shell: bash
               run: |
                 source /opt/intel/oneapi/setvars.sh
-                git clone https://github.com/Unidata/netcdf-c.git
-                cd netcdf-c
-                mkdir build
-                cd build
-                cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=icx ../
-                make -j
-                sudo make install
-                ../../
                 git clone https://github.com/Unidata/netcdf-fortran.git
                 cd netcdf-fortran
                 mkdir build
@@ -67,7 +59,6 @@ jobs:
                 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=icx -DCMAKE_Fortran_COMPILER=ifx -DENABLE_HDF5=OFF ../
                 make -j
                 sudo make install
-                ../../
             - name: Configure CMake Intel
               if: ${{matrix.compiler == 'intel'}}
               shell: bash
