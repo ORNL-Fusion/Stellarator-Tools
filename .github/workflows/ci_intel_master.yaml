@@ -24,14 +24,20 @@ jobs:
             - name: Setup Repo
               shell: bash
               run: |
-                sudo pip install dpcpp-cpp-rt
-                sudo pip install intel-fortran-rt
-                sudo pip install mkl-devel
-                sudo pip install impi-devel
+                # download the key to system keyring
+                wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor | sudo tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
+                # add signed entry to apt sources and configure the APT client to use Intel repository:
+                echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+                sudo apt-get update
+                sudo apt-get install -y intel-oneapi-compiler-dpcpp-cpp \
+                                        intel-oneapi-mpi-devel \
+                                        intel-oneapi-mkl-devel
+                sudo apt-get clean
             - name: Build Libraries Intel
               if: ${{matrix.compiler == 'intel'}}
               shell: bash
               run: |
+                source /opt/intel/oneapi/setvars.sh
                 git clone https://github.com/Unidata/netcdf-c.git
                 cd netcdf-c
                 mkdir build
