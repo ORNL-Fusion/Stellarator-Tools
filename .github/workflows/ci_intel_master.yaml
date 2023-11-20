@@ -8,7 +8,7 @@ jobs:
             matrix:
                 os: [ubuntu-latest]
                 mode: [Release]
-                compiler: [oneapi, classic]
+                compiler: [oneapi]
         runs-on: ${{matrix.os}}
         steps:
             - name: CPU Info
