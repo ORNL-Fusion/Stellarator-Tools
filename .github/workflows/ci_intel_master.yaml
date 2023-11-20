@@ -40,7 +40,7 @@ jobs:
                 source /opt/intel/oneapi/setvars.sh
                 printenv
             - name: Setup Repo OneAPI
-              if: ${{matrix.compiler == 'classic'}}
+              if: ${{matrix.compiler == 'oneapi'}}
               shell: bash
               run: |
                 # download the key to system keyring
