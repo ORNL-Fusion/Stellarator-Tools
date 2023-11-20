@@ -30,22 +30,16 @@ jobs:
                 echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
                 sudo apt-get update
                 sudo apt-get install -y intel-oneapi-compiler-dpcpp-cpp \
+                                        intel-oneapi-compiler-fortran \
                                         intel-oneapi-mpi-devel \
-                                        intel-oneapi-mkl-devel
+                                        intel-oneapi-mkl-devel \
+                                        sudo apt-get install libnetcdf-dev
                 sudo apt-get clean
             - name: Build Libraries Intel
               if: ${{matrix.compiler == 'intel'}}
               shell: bash
               run: |
                 source /opt/intel/oneapi/setvars.sh
-                git clone https://github.com/Unidata/netcdf-c.git
-                cd netcdf-c
-                mkdir build
-                cd build
-                cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=icc ../
-                make -j
-                sudo make install
-                ../../
                 git clone https://github.com/Unidata/netcdf-fortran.git
                 cd netcdf-fortran
                 mkdir build
@@ -53,7 +47,6 @@ jobs:
                 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=icc -DCMAKE_Fortran_COMPILER=ifort -DENABLE_HDF5=OFF ../
                 make -j
                 sudo make install
-                ../../
             - name: Build Libraries OneAPI
               if: ${{matrix.compiler == 'oneapi'}}
               shell: bash
