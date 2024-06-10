@@ -120,35 +120,17 @@ endmacro ()
 #                   SUB) #Optional Sub project directories.
 #-------------------------------------------------------------------------------
 
+# Register LIBSTELL
+register_project(libstell
+                 LIBSTELL
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/LIBSTELL.git
+                 master)
+
 register_project(booz_xform
                  BOOZ_XFORM
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/BOOZ_XFORM.git
                  master
                  LIBSTELL)
-
-# Register V3FIT
-register_project(v3fit
-                 V3FIT
-                 ${URL_PROTO}github.com${URL_SEP}cianciosa/V3FIT.git
-                 master
-                 SIESTA
-                 V3RFUN
-                 LGRID)
-
-# Register V3RFUN
-register_project(v3rfun
-                 V3RFUN
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/V3RFUN.git
-                 master
-                 LIBSTELL)
-
-# Register SIESTA
-register_project(siesta
-                 SIESTA
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SIESTA.git
-                 master
-                 PARVMEC
-                 BMW)
 
 # Register LGRID
 register_project(lgrid
@@ -157,12 +139,12 @@ register_project(lgrid
                  master
                  LIBSTELL)
 
-# Register SURFACE
-register_project(surface
-                 SURFACE
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SURFACE.git
+# Register V3RFUN
+register_project(v3rfun
+                 V3RFUN
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/V3RFUN.git
                  master
-                 BMW)
+                 LIBSTELL)
 
 # Register BMW
 register_project(bmw
@@ -178,6 +160,13 @@ register_project(descur
                  master
                  LIBSTELL)
 
+# Register MAKEGRID
+register_project(makegrid
+                 MAKEGRID
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/MAKEGRID.git
+                 master
+                 LIBSTELL)
+
 # Register PARVMEC
 register_project(parvmec
                  PARVMEC
@@ -186,15 +175,26 @@ register_project(parvmec
                  MAKEGRID
                  LIBSTELL)
 
-# Register MAKEGRID
-register_project(makegrid
-                 MAKEGRID
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/MAKEGRID.git
+# Register SIESTA
+register_project(siesta
+                 SIESTA
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SIESTA.git
                  master
-                 LIBSTELL)
+                 PARVMEC
+                 BMW)
 
-# Register LIBSTELL
-register_project(libstell
-                 LIBSTELL
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/LIBSTELL.git
-                 master)
+# Register V3FIT
+register_project(v3fit
+                 V3FIT
+                 ${URL_PROTO}github.com${URL_SEP}cianciosa/V3FIT.git
+                 master
+                 SIESTA
+                 V3RFUN
+                 LGRID)
+
+# Register SURFACE
+register_project(surface
+                 SURFACE
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SURFACE.git
+                 master
+                 BMW)
