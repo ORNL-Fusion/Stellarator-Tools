@@ -68,7 +68,6 @@ endif ()
 #-------------------------------------------------------------------------------
 macro (register_project name url default_tag)
     string (TOUPPER ${name} dir)
-    set (depends "${ARGN}")
 
     option (BUILD_${dir} "Build ${name} subproject." OFF)
     set (BUILD_TAG_${dir} ${default_tag} CACHE STRING "Name of the tag to checkout.")
@@ -82,7 +81,7 @@ macro (register_project name url default_tag)
             SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${dir}
         )
 
-        FetchContent_MakeAvailable(${name} ${depends})
+        FetchContent_MakeAvailable(${name})
 
         if (GIT_FOUND)
 #  By default cmake clones projects in a headless state. After the repo is
@@ -124,15 +123,32 @@ endmacro ()
 #                   SUB) #Optional Sub project directories.
 #-------------------------------------------------------------------------------
 
-# Register LIBSTELL
-register_project(libstell
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/LIBSTELL.git
-                 master)
-
+# Register BOOZ_XFORM
 register_project(booz_xform
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/BOOZ_XFORM.git
                  master
                  libstell)
+
+# Register V3FIT
+register_project(v3fit
+                 ${URL_PROTO}github.com${URL_SEP}cianciosa/V3FIT.git
+                 master
+                 siesta
+                 v3rfun
+                 lgrid)
+
+# Register V3RFUN
+register_project(v3rfun
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/V3RFUN.git
+                 master
+                 libstell)
+
+# Register SIESTA
+register_project(siesta
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SIESTA.git
+                 master
+                 parvmec
+                 bmw)
 
 # Register LGRID
 register_project(lgrid
@@ -140,11 +156,11 @@ register_project(lgrid
                  master
                  libstell)
 
-# Register V3RFUN
-register_project(v3rfun
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/V3RFUN.git
+# Register SURFACE
+register_project(surface
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SURFACE.git
                  master
-                 libstell)
+                 bmw)
 
 # Register BMW
 register_project(bmw
@@ -158,12 +174,6 @@ register_project(descur
                  master
                  libstell)
 
-# Register MAKEGRID
-register_project(makegrid
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/MAKEGRID.git
-                 master
-                 libstell)
-
 # Register PARVMEC
 register_project(parvmec
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/PARVMEC.git
@@ -171,23 +181,13 @@ register_project(parvmec
                  makegrid
                  libstell)
 
-# Register SIESTA
-register_project(siesta
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SIESTA.git
+# Register MAKEGRID
+register_project(makegrid
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/MAKEGRID.git
                  master
-                 parvmec
-                 bmw)
+                 libstell)
 
-# Register V3FIT
-register_project(v3fit
-                 ${URL_PROTO}github.com${URL_SEP}cianciosa/V3FIT.git
-                 master
-                 siesta
-                 v3rfun
-                 lgrid)
-
-# Register SURFACE
-register_project(surface
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SURFACE.git
-                 master
-                 bmw)
+# Register LIBSTELL
+register_project(libstell
+                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/LIBSTELL.git
+                 master)
