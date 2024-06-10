@@ -24,6 +24,7 @@ jobs:
               working-directory: ${{runner.workspace}}
               run: |
                 git clone https://github.com/ORNL-Fusion/Stellarator-Tools.git ${{runner.workspace}}/Stellarator-Tools
+                cd ${{runner.workspace}}/Stellarator-Tools
                 git checkout ${{github.ref_name}}
             - name: Create build directory.
               working-directory: ${{runner.workspace}}/Stellarator-Tools
