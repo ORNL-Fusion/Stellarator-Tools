@@ -66,7 +66,9 @@ endif ()
 #-------------------------------------------------------------------------------
 #  Define a macro to register new projects.
 #-------------------------------------------------------------------------------
-macro (register_project name dir url default_tag)
+macro (register_project name url default_tag)
+    string (TOUPPER ${name} dir)
+
     option (BUILD_${dir} "Build ${name} subproject." OFF)
     set (BUILD_TAG_${dir} ${default_tag} CACHE STRING "Name of the tag to checkout.")
 
@@ -104,7 +106,8 @@ macro (register_project name dir url default_tag)
 # Anything after the the tag is assumed to be a project dependency.
         set (depends "${ARGN}")
         foreach (project IN LISTS depends)
-            set (BUILD_${project} ON CACHE BOOL "Build ${project}" FORCE)
+            string (TOUPPER ${project} dep)
+            set (BUILD_${dep} ON CACHE BOOL "Build ${dep}" FORCE)
         endforeach ()
     endif ()
 endmacro ()
@@ -120,81 +123,71 @@ endmacro ()
 #                   SUB) #Optional Sub project directories.
 #-------------------------------------------------------------------------------
 
+# Register BOOZ_XFORM
 register_project(booz_xform
-                 BOOZ_XFORM
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/BOOZ_XFORM.git
                  master
-                 LIBSTELL)
+                 libstell)
 
 # Register V3FIT
 register_project(v3fit
-                 V3FIT
                  ${URL_PROTO}github.com${URL_SEP}cianciosa/V3FIT.git
                  master
-                 SIESTA
-                 V3RFUN
-                 LGRID)
+                 siesta
+                 v3rfun
+                 lgrid)
 
 # Register V3RFUN
 register_project(v3rfun
-                 V3RFUN
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/V3RFUN.git
                  master
-                 LIBSTELL)
+                 libstell)
 
 # Register SIESTA
 register_project(siesta
-                 SIESTA
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SIESTA.git
                  master
-                 PARVMEC
-                 BMW)
+                 parvmec
+                 bmw)
 
 # Register LGRID
 register_project(lgrid
-                 LGRID
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/LGRID.git
                  master
-                 LIBSTELL)
+                 libstell)
 
 # Register SURFACE
 register_project(surface
-                 SURFACE
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SURFACE.git
                  master
-                 BMW)
+                 bmw)
 
 # Register BMW
 register_project(bmw
-                 BMW
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/BMW.git
                  master
-                 LIBSTELL)
+                 libstell)
 
 # Register DESCUR
 register_project(descur
-                 DESCUR
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/DESCUR.git
                  master
-                 LIBSTELL)
+                 libstell)
 
 # Register PARVMEC
 register_project(parvmec
-                 PARVMEC
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/PARVMEC.git
                  master
-                 MAKEGRID
-                 LIBSTELL)
+                 makegrid
+                 libstell)
 
 # Register MAKEGRID
 register_project(makegrid
-                 MAKEGRID
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/MAKEGRID.git
                  master
-                 LIBSTELL)
+                 libstell)
 
 # Register LIBSTELL
 register_project(libstell
-                 LIBSTELL
                  ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/LIBSTELL.git
                  master)
