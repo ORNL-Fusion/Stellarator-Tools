@@ -52,6 +52,50 @@ register_sanitizer_option (undefined ON)
 register_sanitizer_option (float-divide-by-zero ON)
 
 #-------------------------------------------------------------------------------
+#  Trap options
+#-------------------------------------------------------------------------------
+add_library (traps INTERFACE)
+
+macro (register_trap_option name)
+    string (TOUPPER ${name} upper_name)
+
+    option (TRAP_${upper_name} "Enable the ${name} trap" OFF)
+
+    target_compile_options (traps
+                            INTERFACE
+                            $<$<AND:$<BOOL:${TRAP_${upper_name}}>,$<Fortran_COMPILER_ID:GNU>,$<COMPILE_LANGUAGE:Fortran>>:-ffpe-trap=${name}>
+    )
+endmacro ()
+
+register_trap_option (invalid)
+register_trap_option (zero)
+register_trap_option (overflow)
+register_trap_option (inexact)
+register_trap_option (denormal)
+
+#-------------------------------------------------------------------------------
+#  Trap options
+#-------------------------------------------------------------------------------
+add_library (checks INTERFACE)
+
+macro (register_checks_option name)
+    string (TOUPPER ${name} upper_name)
+
+    option (CHECK_${upper_name} "Enable the ${name} checks" OFF)
+
+    target_compile_options (checks
+                            INTERFACE
+                            $<$<AND:$<BOOL:${CHECK_${upper_name}}>,$<Fortran_COMPILER_ID:GNU>,$<COMPILE_LANGUAGE:Fortran>>:-fcheck=${name}>
+    )
+endmacro ()
+
+register_checks_option (recursion)
+register_checks_option (pointer)
+register_checks_option (mem)
+register_checks_option (do)
+register_checks_option (bounds)
+
+#-------------------------------------------------------------------------------
 #  Setup access method.
 #-------------------------------------------------------------------------------
 option (USE_SSH "Use ssh to access git repos" OFF)

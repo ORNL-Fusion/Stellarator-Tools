@@ -1,0 +1,74 @@
+name: Continuous Integration Test Intel Master
+on:
+    workflow_dispatch:
+    push:
+jobs:
+    ci_test:
+        strategy:
+            matrix:
+                os: [ubuntu-latest]
+                mode: [Release]
+                compiler: [oneapi]
+        runs-on: ${{matrix.os}}
+        steps:
+            - name: CPU Info
+              if: ${{matrix.os == 'ubuntu-latest'}}
+              run: awk '{if ($0=="") exit; print $0}' /proc/cpuinfo
+            - name: Clone Repo
+              shell: bash
+              working-directory: ${{runner.workspace}}
+              run: git clone https://github.com/ORNL-Fusion/Stellarator-Tools.git ${{runner.workspace}}/Stellarator-Tools
+            - name: Create build directory.
+              working-directory: ${{runner.workspace}}/Stellarator-Tools
+              run: cmake -E make_directory build
+            - name: Setup Repo
+              shell: bash
+              run: |
+                # download the key to system keyring
+                wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor | sudo tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
+                # add signed entry to apt sources and configure the APT client to use Intel repository:
+                echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+                sudo apt-get update
+                sudo apt-get install -y intel-oneapi-compiler-dpcpp-cpp \
+                                        intel-oneapi-compiler-fortran \
+                                        intel-oneapi-mpi-devel \
+                                        intel-oneapi-mkl-devel \
+                                        libnetcdf-dev
+                sudo apt-get clean
+                ls /opt/intel/oneapi/mkl
+                source /opt/intel/oneapi/setvars.sh
+                printenv
+            - name: Build Libraries
+              shell: bash
+              run: |
+                source /opt/intel/oneapi/setvars.sh
+                git clone https://github.com/Unidata/netcdf-fortran.git
+                cd netcdf-fortran
+                mkdir build
+                cd build
+                cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=icx -DCMAKE_Fortran_COMPILER=ifx -DENABLE_HDF5=OFF ../
+                make -j
+                sudo make install
+            - name: Configure CMake
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build
+              run: |
+                source /opt/intel/oneapi/setvars.sh
+                cmake -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx -DCMAKE_Fortran_COMPILER=ifx -DBLA_VENDOR=Intel10_64_dyn -DCMAKE_BUILD_TYPE=${{matrix.mode}} -DCMAKE_PREFIX_PATH=$MKLROOT -DCMAKE_EXE_LINKER_FLAGS=-qmkl-ilp64=parallel -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
+            - name: Build
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build
+              run: |
+                source /opt/intel/oneapi/setvars.sh
+                make -j VERBOSE=1
+            - name: Test Linux
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build
+              run: |
+                source /opt/intel/oneapi/setvars.sh
+                make test ARGS=-j2
+            - name: Show Log
+              if: failure()
+              shell: bash
+              working-directory: ${{runner.workspace}}/Stellarator-Tools/build/Testing/Temporary
+              run: cat LastTest.log
