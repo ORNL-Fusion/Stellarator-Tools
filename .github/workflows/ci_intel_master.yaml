@@ -21,23 +21,7 @@ jobs:
             - name: Create build directory.
               working-directory: ${{runner.workspace}}/Stellarator-Tools
               run: cmake -E make_directory build
-            - name: Setup Repo Classic
-              if: ${{matrix.compiler == 'classic'}}
-              shell: bash
-              run: |
-                # download the key to system keyring
-                wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor | sudo tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
-                # add signed entry to apt sources and configure the APT client to use Intel repository:
-                echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
-                sudo apt-get update
-                sudo apt-get install -y intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic \
-                                        intel-oneapi-compiler-fortran \
-                                        intel-oneapi-mpi-devel \
-                                        intel-oneapi-mkl-devel \
-                                        libnetcdf-dev
-                sudo apt-get clean
-            - name: Setup Repo OneAPI
-              if: ${{matrix.compiler == 'oneapi'}}
+            - name: Setup Repo
               shell: bash
               run: |
                 # download the key to system keyring
@@ -54,20 +38,7 @@ jobs:
                 ls /opt/intel/oneapi/mkl
                 source /opt/intel/oneapi/setvars.sh
                 printenv
-            - name: Build Libraries Classic
-              if: ${{matrix.compiler == 'classic'}}
-              shell: bash
-              run: |
-                source /opt/intel/oneapi/setvars.sh
-                git clone https://github.com/Unidata/netcdf-fortran.git
-                cd netcdf-fortran
-                mkdir build
-                cd build
-                cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=icc -DCMAKE_Fortran_COMPILER=$CMPLR_ROOT/linux/bin/intel64/ifort -DENABLE_HDF5=OFF ../
-                make -j
-                sudo make install
-            - name: Build Libraries OneAPI
-              if: ${{matrix.compiler == 'oneapi'}}
+            - name: Build Libraries
               shell: bash
               run: |
                 source /opt/intel/oneapi/setvars.sh
@@ -78,15 +49,7 @@ jobs:
                 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=icx -DCMAKE_Fortran_COMPILER=ifx -DENABLE_HDF5=OFF ../
                 make -j
                 sudo make install
-            - name: Configure CMake Intel
-              if: ${{matrix.compiler == 'classic'}}
-              shell: bash
-              working-directory: ${{runner.workspace}}/Stellarator-Tools/build
-              run: |
-                source /opt/intel/oneapi/setvars.sh
-                cmake -DCMAKE_C_COMPILER=icc -DCMAKE_CXX_COMPILER=iccpc -DCMAKE_Fortran_COMPILER=$CMPLR_ROOT/linux/bin/intel64/ifort -DBLA_VENDOR=Intel10_64_dyn -DCMAKE_BUILD_TYPE=${{matrix.mode}} -DCMAKE_PREFIX_PATH=$MKLROOT -DCMAKE_EXE_LINKER_FLAGS=-qmkl-ilp64=parallel -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DUSE_FAST_COPY=ON -DUSE_PROFILER=ON ${{runner.workspace}}/Stellarator-Tools/
-            - name: Configure CMake OneAPI
-              if: ${{matrix.compiler == 'oneapi'}}
+            - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
               run: |
