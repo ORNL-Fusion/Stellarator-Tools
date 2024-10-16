@@ -3,7 +3,9 @@
  * @tableofcontents
  * @section introduction Introduction
  * This documentation combines end user and developer documentation into a 
- * single reference.
+ * single reference. The code for
+ * <a href="https://github.com/ORNL-Fusion/Stellarator-Tools">Stellarator-Tools</a>
+ * is hosted on GitHub.
  *
  * @section user User manuals
  * These manuals cover topics for end users on how to operate V3FIT.

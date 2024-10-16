@@ -15,6 +15,7 @@ subprojects are.
 * [BOOZ_XFORM](https://github.com/ORNL-Fusion/BOOZ_XFORM.git) Convert VMEC coordinates to Boozer coordinates.
 
 #  Documentation
+* [Stellarator-Tools-Docs](https://ornl-fusion.github.io/Stellarator-Tools-Docs/) Documentation for the Stellarator Tools suite of codes.
 * [VMEC-internals](https://github.com/jonathanschilling/vmec-internals) Some VMEC-internal documentation
 
 # Testing
