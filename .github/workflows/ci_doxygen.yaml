@@ -1,0 +1,46 @@
+name: Build Documentation
+on:
+    workflow_dispatch:
+    push:
+jobs:
+    if: ${{github.ref_name}} == 'master'
+    ci_doxygen:
+        runs-on: unbuntu-latest
+        steps:
+            - name: Clone Repo
+                shell:bash
+                working-directory: ${{runner.workspace}}
+                run: |
+                    git clone https://github.com/ORNL-Fusion/Stellarator-Tools.git ${{runner.workspace}}/Stellarator-Tools
+                    git clone https://github.com/ORNL-Fusion/Stellarator-Tools-Docs.git
+            - name: Create build directory.
+                working-directory: ${{runner.workspace}}/Stellarator-Tools
+                run: cmake -E make_directory build
+            - name: Install Libraries Linux
+                shell: bash
+                run: |
+                    sudo apt update
+                    sudo apt-get install libnetcdf-dev
+                    sudo apt-get install libnetcdff-dev
+                    sudo apt-get install libopenmpi-dev
+                    sudo apt-get install libscalapack-openmpi-dev
+                    sudo apt-get install doxygen
+            - name: Configure CMake
+                shell: bash
+                working-directory: ${{runner.workspace}}/Stellarator-Tools/build
+                run: cmake -DCMAKE_BUILD_TYPE=${{matrix.mode}} -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DDOXYGEN_OUTPUT_DIRECTORY=${{runner.workspace}}/Stellarator-Tools-Docs
+            - name: Build
+                shell: bash
+                working-directory: ${{runner.workspace}}/Stellarator-Tools/build
+                run: make doc
+            - name: Push changes.
+                shell: bash
+                working-directory: ${{runner.workspace}}/Stellarator-Tools-Docs/html
+                env:
+                    GITHUB_TOKEN = ${{secrets.GITHUB_TOKEN}}
+                run: |
+                    git config user.name = ${{github.actor}}
+                    git add *
+                    git commit . -m "Update Doxygen docs."
+                    git push origin main
+
