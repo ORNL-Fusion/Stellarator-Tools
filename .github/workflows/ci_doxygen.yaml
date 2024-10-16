@@ -42,8 +42,8 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{secrets.AUTH_TOKEN}}
               run: |
-                git config user.name ${{github.actor}}
+                git config user.name ${{secrets.AUTH_USER}}
+                git config user.email ${{secrets.AUTH_EMAIL}}
                 git add *
                 git commit . -m "Update Doxygen docs."
                 git push origin main
-
