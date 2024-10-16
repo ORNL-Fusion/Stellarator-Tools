@@ -1,0 +1,360 @@
+/*!
+ * @page class_anatomy Class Anatomy
+ * @brief Overview of the design of an object for V3FIT.
+ * @tableofcontents
+ *
+ * @section class_anatomy_intro Introduction
+ * This page provides an overview of the object oriented partterns used through
+ * out V3FIT. Older parts of the code use a different style than presented here.
+ * For consistency, any new coding should follow this design pattern.
+ * 
+ * A class is a construct used to define a distinct type. A class is 
+ * instantiated into instances of itself. A class containes members that define
+ * its state and behavior. The state is defined by the data members. The 
+ * behavior is defined by the methods.
+ *
+ * Each class should be contained in it's own module. Methods, types
+ * and parameters associated with a class should be named with a prefix.
+ * @code
+ * example_class_...
+ * @endcode
+ *
+ * @section class_anatomy_type The Class Type
+ * The data members are stored in an instance of a class object or more simply,
+ * an object. This contains all of the data members needed to hold the state of
+ * the class instance. Class objects are defined as a type using the module name
+ * @code{.f}
+ * !*******************************************************************************
+ * !  DERIVED-TYPE DECLARATIONS
+ * !  1) diagnostic base class
+ * !
+ * !*******************************************************************************
+ *       TYPE example_class
+ *       END TYPE
+ * @endcode
+ *
+ * For creating arrays of these objects, it's also convienent to define a 
+ * derived type containing a pointer. Again, these class object pointers are 
+ * defined as a type using the module name
+ * @code{.f}
+ * !-------------------------------------------------------------------------------
+ *       TYPE example_pointer
+ *          TYPE (example_class), POINTER :: p => null()
+ *       END TYPE
+ * @endcode
+ *
+ * @subsection class_anatomy_subclassing Subclassing
+ * Subclasses are classes that expand upon the behavior the general class 
+ * behavior of the super class. V3FIT uses subclasses and class hierachy 
+ * extensively to provide an abstract interface where implentation details
+ * specific to a class are hidden away from parts of the code that are not 
+ * concerned with the specific details.
+ *
+ * To accomplish this generic interface, an instance of a subclass is stored
+ * inside an instance of the super class. This allows for the code to use a 
+ * single generic type defined by the super class. A class that is subclassed, 
+ * needs to define some parameters that store the type idenitifcation of the 
+ * subclass instance. These parameters are defined as an integer with an ID 
+ * number. An id of -1 is reserved for the instance of no subclass instance.
+ * @code{.f}
+ * !*******************************************************************************
+ * !  diagnostic module parameters
+ * !*******************************************************************************
+ *       INTEGER, PARAMETER :: example_no_type = -1
+ *       INTEGER, PARAMETER :: example_subclass_type = 0
+ *       ...
+ * @endcode
+ *
+ * The super class stores the type ID and a pointer to subclass instance.
+ * @code{.f}
+ * !*******************************************************************************
+ * !  DERIVED-TYPE DECLARATIONS
+ * !  1) diagnostic base class
+ * !
+ * !*******************************************************************************
+ *       TYPE example_class
+ *          INTEGER                           :: type = example_no_type
+ *          TYPE (example_sub_class), POINTER :: subclass => null()
+ *       END TYPE
+ * @endcode
+ *
+ * @section class_anatomy_methods Methods
+ * Methods define the behiavor of the class instance. In object oriented 
+ * programming, there are two types of methods. Instance methods, define 
+ * behavior that acts on or is affected by the state of specific class instance.
+ * These methods take a specific class instance as the first argument named 
+ * this. The second method type are called class methods. These methods define
+ * behavior that is specific to a class by generic to an all instances of that 
+ * class. These methods do not take a class instance as an argument. In general
+ * class methods are typically not used in V3FIT.
+ *
+ * @subsection class_anatomy_virtual_methods Virtual Methods
+ * To create the generic interfaces that V3FIT uses when dealing with 
+ * subclasses, the methods may be considered virtual. This means one of three 
+ * things.
+ * * The super class contains no implmentation and an implenentation is left up to the subclass.
+ * * The super class contains an implmentation and the subclass inherents that one.
+ * * The super class contains an implmentation and the subclass overrides it.
+ *
+ * Because of this each method needs to check a subclass instance type first to 
+ * decide the correct behavior. When using, the second method behavior, it is 
+ * not necessary to define a method in the subclass module.
+ * @code{.f}
+ * !-------------------------------------------------------------------------------
+ * !  The super class contains no implmentation and an implenentation is left up to
+ * !  the subclass.
+ * !-------------------------------------------------------------------------------
+ *       FUNCTION example_method_1(this)
+ *
+ *       IMPLICIT NONE
+ *
+ * !  Declare Arguments
+ *       INTEGER                          :: example_method_1
+ *       TYPE (example_class), INTENT(in) :: this
+ *
+ * !  Start of executable code
+ *       SELECT CASE(this%type)
+ *          
+ *          CASE (example_subclass_type)
+ *             example_method_1 = example_subclass_method_1(this%subclass)
+ *
+ *          CASE DEFAULT
+ *             assert('Expected subclass method.')
+ *
+ *       END SELECT
+ *
+ *       END FUNCTION
+ *
+ * !-------------------------------------------------------------------------------
+ * !  The super class contains an implmentation and the subclass inherents that
+ * !  one.
+ * !-------------------------------------------------------------------------------
+ *       FUNCTION example_method_2(this)
+ *
+ *       IMPLICIT NONE
+ *
+ * !  Declare Arguments
+ *       INTEGER                          :: example_method_2
+ *       TYPE (example_class), INTENT(in) :: this
+ *
+ * !  Start of executable code
+ *       SELECT CASE(this%type)
+ *          
+ *          CASE DEFAULT
+ *             example_method_2 = 0
+ *
+ *       END SELECT
+ *
+ *       END FUNCTION
+ *
+ * !-------------------------------------------------------------------------------
+ * !  The super class contains an implmentation and the subclass overrides it.
+ * !-------------------------------------------------------------------------------
+ *       FUNCTION example_method_3(this)
+ *
+ *       IMPLICIT NONE
+ *
+ * !  Declare Arguments
+ *       INTEGER                          :: example_method_3
+ *       TYPE (example_class), INTENT(in) :: this
+ *
+ * !  Start of executable code
+ *       SELECT CASE(this%type)
+ *          
+ *          CASE (example_subclass_type)
+ *             example_method_3 = example_subclass_method_1(this%subclass)
+ *
+ *          CASE DEFAULT
+ *             example_method_3 = 0
+ *
+ *       END SELECT
+ *
+ *       END FUNCTION
+ * @endcode
+ *
+ * Note that the interger value stored in the type field of the class instance 
+ * should never be compared with the integer number directly. Instead the type 
+ * field should be compared against the defined parameters. This allows the 
+ * interger number to be redefined without breating the expected behavior.
+ *
+ * @subsection class_anatomy_constructers Constructors
+ * The job of a constructor is to allocate memory for a class object instance
+ * and initalize the members for the class. To allow the memory allocation to 
+ * be encapsilated inside the constructor method, constructors are implemented
+ * as a function returning a pointer to the allocated and initalized object
+ * instance.
+ * @code{.f}
+ * !*******************************************************************************
+ * !  CONSTRUCTION SUBROUTINES
+ * !*******************************************************************************
+ *       FUNCTION example_class_construct()
+ *
+ *       IMPLICIT NONE
+ *
+ * !  Declare Arguments
+ *       TYPE (example_class), POINTER :: example_class_construct
+ *
+ * !  Start of executable code
+ *       ALLOCATE(example_class_construct)
+ *
+ *       END FUNCTION
+ * @endcode
+ *
+ * @subsubsection class_anatomy_constructers_subclass Subclass Constructors
+ * Subclassed objects are created by passing a subclass object instance as an
+ * argument of a super class constructor. The constructor method should be over
+ * loaded for each subclass instance. Since all constructors return a pointer,
+ * and subclasses are stored as pointers in the super class, the subclass object
+ * argument needs to be passed in as a pointer as well. This constructor is also
+ * responsible for setting the subclass type id.
+ * @code{.f}
+ * !*******************************************************************************
+ * !  INTERFACE BLOCKS
+ * !*******************************************************************************
+ *       INTERFACE example_class_construct
+ *          MODULE PROCEDURE example_class_construct_subclass
+ *       END INTERFACE
+ *
+ * !*******************************************************************************
+ * !  CONSTRUCTION SUBROUTINES
+ * !*******************************************************************************
+ *       FUNCTION example_class_construct_subclass(subclass_object)
+ *
+ *       IMPLICIT NONE
+ *
+ * !  Declare Arguments
+ *       TYPE (example_class), POINTER :: example_class_construct_subclass
+ *       TYPE (example_sub_class), POINTER, INTENT(in) :: subclass_object
+ *
+ * !  Start of executable code
+ *       ALLOCATE(example_class_construct_subclass)
+ *       example_class_construct_subclass%type = example_subclass_type
+ *       example_class_construct_subclass%subclass => subclass_object
+ *
+ *       END FUNCTION
+ * @endcode
+ * Implementing the constructors as functions stead of subroutines, allows the
+ * subclass constructor to be inlined directly as the argument to a super class
+ * constructor.
+ * @code{.f}
+ *       class_instance => example_class_construct(                               &
+ *      &                     example_subclass_construct())
+ * @endcode
+ *
+ * @subsubsection class_anatomy_constructers_copy Copy Constructors
+ * Some times in may be necessary to create a second instance of the same 
+ * object. Since the class objects here make extensive use of pointers, the
+ * default assignment operator will not duplicate a class. Instead a copy
+ * copy constructor should be used. A copy constructor is a constructor that 
+ * takes an opject instance as a the only argument. The copy constructor, 
+ * allocates memory for a new instance, then copies all the numbers to the 
+ * member data. If the class contains subclasses, or other objects, these 
+ * object should be copied by calling that classes copy constructor.
+ * @code{.f}
+ * !*******************************************************************************
+ * !  INTERFACE BLOCKS
+ * !*******************************************************************************
+ *       INTERFACE example_class_construct
+ *          MODULE PROCEDURE example_class_construct_subclass,                    &
+ *      &                    example_class_construct_copy
+ *       END INTERFACE
+ *
+ * !*******************************************************************************
+ * !  CONSTRUCTION SUBROUTINES
+ * !*******************************************************************************
+ *       FUNCTION example_class_construct_copy(this)
+ *
+ *       IMPLICIT NONE
+ *
+ * !  Declare Arguments
+ *       TYPE (example_class), POINTER :: example_class_construct_copy
+ *       TYPE (example_class), POINTER, INTENT(in) :: this
+ *
+ * !  Start of executable code
+ *       ALLOCATE(example_class_construct_copy)
+ *       example_class_construct_copy%type = this%type
+ *       IF (ASSOCIATED(this%subclass)) THEN
+ *          example_class_construct_copy%subclass =>                              &
+ *      &      example_subclass_construct(this%subclass)
+ *       END IF
+ *
+ *       END FUNCTION
+ * @endcode
+ *
+ * @subsection class_anatomy_destructers Destructors
+ * Destructors perform the opposite function of constructors. These are 
+ * reponsible for uninitializing the object and deallocating the associated
+ * memory. If a class instance contains, subclasses, or instances of other 
+ * objects, the destructors for those classes instances need to be called from
+ * inside the destructor. Since destructors do not return anything, these are
+ * implimented as subroutines.
+ * @code{.f}
+ * !*******************************************************************************
+ * !  DESTRUCTION SUBROUTINES
+ * !*******************************************************************************
+ *       SUBROUTINE example_class_destruct(this)
+ *
+ *       IMPLICIT NONE
+ *
+ * !  Declare Arguments
+ *       TYPE (example_class), POINTER, INTENT(inout) :: this
+ *
+ * !  Start of executable code
+ *       IF (ASSOCIATED(this%subclass)) THEN
+ *          CALL example_subclass_destruct(this%subclass)
+ *          this%subclass => null()
+ *       END IF
+ *
+ *       this%type = example_no_type
+ *
+ *       DEALLOCATE(this)
+ *
+ *       END SUBROUTINE       
+ * @endcode
+ *
+ * @subsection class_anatomy_setters Setters
+ * Setters are used to set the value of a variable. A setter should be named
+ * @fixed_width{_set_variable} where variable is the name of the class variable
+ * to be set. Since setters typically do not return anything, these methods are 
+ * implemented as subroutines.
+ * @code{.f}
+ * !*******************************************************************************
+ * !  SETTER SUBROUTINES
+ * !*******************************************************************************
+ *       SUBROUTINE example_class_set_variable(this, value)
+ *
+ *       IMPLICIT NONE
+ *
+ * !  Declare Arguments
+ *       TYPE (example_class), POINTER, INTENT(inout) :: this
+ *       INTEGER, INTENT(in)                          :: value
+ *
+ * !  Start of executable code
+ *       this%variable = value
+ *
+ *       END SUBROUTINE       
+ * @endcode
+ *
+ * @subsection class_anatomy_getters Getters
+ * Getters are use to retrieve the value of a variable. A getter should be named
+ * @fixed_width{_get_variable} where variable is the name of the class variable
+ * to be retrieved. Since getters typically return values, these methods are
+ * implemented as functions.
+ * @code{.f}
+ * !*******************************************************************************
+ * !  GETTER SUBROUTINES
+ * !*******************************************************************************
+ *       FUNCTION example_class_get_variable(this)
+ *
+ *       IMPLICIT NONE
+ *
+ * !  Declare Arguments
+ *       INTEGER :: example_class_get_variable
+ *       TYPE (example_class), POINTER, INTENT(in) :: this
+ *
+ * !  Start of executable code
+ *       example_class_get_variable = this%variable
+ *
+ *       END FUNCTION       
+ * @endcode
+ */
