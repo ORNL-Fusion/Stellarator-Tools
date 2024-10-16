@@ -1,0 +1,199 @@
+/*!
+ * @page build_system V3FIT Build System
+ * @brief Overview of the Cmake based build system for V3FIT.
+ * @tableofcontents
+ *
+ * @section build_system_intro Introduction
+ * The V3FIT suite of codes contains two parallel build systems. This document
+ * focuses on the new Cmake based build system. This newer build system also
+ * controls the testing and generation of this documentation and is recommended
+ * for all new users.
+ *
+ * The Cmake is a cross platform, build system generation tool. It provides 
+ * automated facilities for finding libraries and determining source code 
+ * dependencies. The Cmake tool is availible from 
+ * <a href="http://www.cmake.org">cmake.org</a>. This suite requires Cmake 
+ * version 2.8 or higher. Cmake can be configured by setting various variables
+ * on the command line.
+ * @code
+ -DVARIABLE=value
+ -DOTHER_VARIABLE="value1 value2 value3"
+ @endcode
+ * Once a variable has been set on the cmake command line, that value is cached
+ * and it is no longer necessary to reset it for subsequent Cmake commands.
+ *
+ * For V3FIT, Cmake generates makefiles that can be used to build various 
+ * components. The resulting makefiles contain a bunch of tasks. These takes can
+ * be displayed using the
+ * @code
+ make help
+ @endcode
+ * command. For debugging purposes, the full build commandline commands can be 
+ * displaced using.
+ * @code
+ make VERBOSE=1
+ @endcode
+ *
+ * @section build_system_dependencies Dependencies
+ * Dependencies on any software project fall under two types. External libraies
+ * that provide functionality that the code uses must be found for the build 
+ * system to use. The second type of dependency is determining the proper build
+ * order.
+ *
+ * @subsection build_system_libraries Libraries
+ * The v3fit suite requires a few external libraries to build. LAPACK and BLAS
+ * provide linear algebra routines. Optimized version of these libraies are 
+ * typically included by an OS or compiler vendor. These packages are found 
+ * automatically by Cmake using the 
+ * @code
+ find_package
+ @endcode
+ * function. If for some reason Cmake cannot find working copies of these 
+ * libraries an error message should instruct the correct variables to set. If
+ * libraries can be found in non standard paths, setting the
+ * @fixed_width{CMAKE_PREFIX_PATH} variable will allow the automated search
+ * functions to find these files.
+ *
+ * The <a href="http://www.unidata.ucar.edu/software/netcdf/">NetCDF</a> 
+ * provides routines for reading and writting binary files. Unlike the 
+ * LAPACK/BLAS libraries, Cmake version 2.8 does not come with a built in
+ * package to find the netcdf routines. These libraries must be specified 
+ * manually by the defining
+ * @code
+ -DNETCDF_INC_PATH="/path/to/the/netcdf/.inc/file"
+ -DNETCDF_LIB_PATH="/path/to/the/netcdf/libs"
+ @endcode
+ * If the NetCDF libraries were sucessfully found, the message "Using NetCDF 
+ * should be displayed.
+ *
+ * @subsection build_system_sources Sources
+ * Cmake parses all the sources file to determine the proper source code level
+ * dependencies. The source is specified in the CMakeLists.txt file or source
+ * directory. When adding new files to be build, the appropiate CMakeLists.txt
+ * needs to be updated aswell. It is not necessary to rerun Cmake at this stage.
+ * Instead the build system will automatically detect the change and rerun the
+ * depenency generation.
+ *
+ * @section build_system_documentation Documentation
+ * This documentation was generated using the 
+ * <a href="http://www.stack.nl/~dimitri/doxygen/index.html">Doxygen</a> tool.
+ * If the doxygen tool is detected, and extra task is added to the make file. 
+ * @code
+ make doc
+ @endcode
+ * More on the Doxygen generated documentation is avalable on the @ref doxygen
+ * page.
+ *
+ * @section build_system_testing Testing
+ * Using CMake a testing frame work has been implmented. Tests maybe run by 
+ * @code
+ make test
+ @endcode
+ * or by running
+ * @code
+ ctest
+ @endcode
+ * Individual or ranges of tests maybe run by using the 
+ * @fixed_width{ctest -R &ltregex&gt} command. As an example to run all the tests
+ * for diagnostic rotation use the command 
+ * @code
+ ctest -R ^diagnostic_rotation
+ @endcode
+ *
+ * Note that the executables need to be generated already and tests need to be 
+ * configured. Typically tests should be run using the sequence of commands
+ * @code
+ make
+ make test
+ @endcode
+ * The results from tests and log file is found in Testing/Temporary.
+ *
+ * @section build_system_running Running Cmake
+ * Cmake can be invoked manually using the command line or using the 
+ * setup_cmake. This script, acts like the old setup script. It detects the 
+ * current build machine and runs the appropiate cmake command line. Otherwise
+ * the cmake command may be invoked directly.
+ *
+ * Once the makefile has been generated, the cmake command never needs to be run
+ * again except to reconfigure a build variable. When a CMakeList.txt file is 
+ * altered, the cmake command is rerun using cached values for the variables.
+ *
+ * @subsection build_system_cmake_variables Cmake Variables
+ * @header3{Variable, Values, Discription}
+ * @subsubsection build_system_cmake_variables_builtin Built In Variables
+ * @begin_table
+ *    @item4{CMAKE_Fortran_COMPILER, Path,     Path or command name for the fortran compiler.}
+ *    @item4{CMAKE_Fortran_FLAGS,    String,   Flags to pass to the fortran compiler.}
+ *    @item4{CMAKE_C_COMPILER,       Path,     Path or command name for the C compiler. While V3FIT and VMEC are all
+ *                                             written in Fortran\, some of the Cmake find packages use C compilers.}
+ *    @item4{CMAKE_CXX_COMPILER,     Path,     Path or command name for the C++ compiler. While V3FIT and VMEC are all
+ *                                             written in Fortran\, some of the Cmake find packages use C++ compilers.}
+ *    @item4{CMAKE_BUILD_TYPE,       String
+ *                                   * Release
+ *                                   * Debug,  Sets weither to generate build files for release or debug versions.}
+ *    @item4{CMAKE_PREFIX_PATH,      Path,     Paths to use when searching for libraries and executables.}
+ * @end_table
+ * @subsubsection build_system_cmake_variables_defined Defined Variables
+ * @begin_table
+ *    @item4{NETCDF_INC_PATH,        Path,     Path to the NetCDF include directory.}
+ *    @item4{NETCDF_LIB_PATH,        Path,     Path to the NetCDF include directory.}
+ *    @item4{EXTRA_FLAGS,            String,   Extra flags to pass to the compiler for all build modes.}
+ *    @item4{EXTRA_RELEASE_FLAGS,    String,   Extra flags to pass to the compiler for Release builds.}
+ *    @item4{EXTRA_DEBUG_FLAGS,      String,   Extra flags to pass to the compiler for Debug builds.}
+ *    @item4{USE_PROFILER,           String
+ *                                   * On
+ *                                   * Off,    Controls if code profiling is turned on or off.}
+ * @end_table
+ *
+ * @subsection build_system_running_example Running Cmake Example
+ * As an example a typical cmake command line used for the Auburn experiment is
+ * @code
+ cmake -DCMAKE_BUILD_TYPE:String=Release -DCMAKE_Fortran_COMPILER=gfortran -DNETCDF_INC_PATH=/usr/include/ -DNETCDF_LIB_PATH=/usr/lib -DCMAKE_Fortran_FLAGS=-DNEW_CODE -DEXTRA_RELEASE_FLAGS:String="-m64 -mfpmath=sse -march=native -msse4a -msse3"
+ @endcode
+ * The first defined variable, @fixed_width{CMAKE_BUILD_TYPE} tells cmake to 
+ * generate an optimized build. By default Cmake builds in Debug mode. At any 
+ * time, Cmake maybe reconfigured by redifining a variable. For instance if
+ * cmake was configured as a Release build, it may be reconfigured as a debug 
+ * build by redefining @fixed_width{CMAKE_BUILD_TYPE} as
+ * @code
+ cmake -DCMAKE_BUILD_TYPE:String=Debug
+ @endcode
+ * Note that only the @fixed_width{CMAKE_BUILD_TYPE} variable needed to be 
+ * reset. When redefining a variable all the other variables remain the same.
+ * 
+ * Cmake has limited support for certain fortran compilers. This is because 
+ * cmake needs to know the format and command line arguments of a specific 
+ * compiler in order to generate a make file correctly. As a result, if there is
+ * more than one compiler installed, cmake may find one it doesn't under stand.
+ * As a result, for the Auburn builds, the @fixed_width{CMAKE_Fortran_COMPILER} 
+ * must be forced to gfortran. Most users should not need to perform this step.
+ *
+ * For the @fixed_width{NETCDF_INC_PATH} and @fixed_width{NETCDF_LIB_PATH} 
+ * variables see the @ref build_system_libraries section. All users need to 
+ * define these two variables.
+ * 
+ * The @fixed_width{EXTRA_RELEASE_FLAGS} and the coresponding 
+ * @fixed_width{EXTRA_DEBUG_FLAG} are optional variables that maybe used to 
+ * define extra build flags. Extra flags can be used to specify extra compiler 
+ * options for performance tuning or debugging purposes. It is not required that
+ * these be set.
+ *
+ * @section build_system_build_directory Build Directory
+ * CMake is configured to generate all build products in the build directory.
+ * Commands can be found in build/bin. The various libraries that are created as
+ * intermediate steps can be found in build/lib. Compiled modules for each 
+ * project can be found in build/modules.
+ *
+ * @section build_system_trouble_shooting Trouble Shooting
+ * If problems are encountered with the build system it is recommened to first
+ * try a clean build. Clean builds may be generated by running
+ * @code
+ make clean
+ make
+ @endcode
+ * If problems persist, the command line arguments used to invoke the compiler
+ * and linker may be checked by running
+ * @code
+ make VERBOSE=1
+ @endcode
+ */
