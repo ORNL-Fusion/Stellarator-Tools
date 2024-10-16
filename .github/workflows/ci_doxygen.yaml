@@ -2,6 +2,8 @@ name: Build Documentation
 on:
     workflow_dispatch:
     push:
+        branches:
+          - 'master'
 jobs:
     ci_doxygen:
         if: ${{github.ref_name}} == 'master'
@@ -29,7 +31,7 @@ jobs:
             - name: Configure CMake
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
-              run: cmake -DCMAKE_BUILD_TYPE=${{matrix.mode}} -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DDOXYGEN_OUTPUT_DIRECTORY=${{runner.workspace}}/Stellarator-Tools-Docs
+              run: cmake -DBUILD_BOOZ_XFORM=ON -DBUILD_V3FIT=ON -DBUILD_V3RFUN=ON -DBUILD_SIESTA=ON -DBUILD_LGRID=ON -DBUILD_SURFACE=ON -DBUILD_BMW=ON -DBUILD_PARVMEC=ON -DBUILD_DESCUR=ON -DDOXYGEN_OUTPUT_DIRECTORY=${{runner.workspace}}/Stellarator-Tools-Docs
             - name: Build
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools/build
