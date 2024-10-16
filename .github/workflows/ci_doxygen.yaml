@@ -12,9 +12,11 @@ jobs:
             - name: Clone Repo
               shell: bash
               working-directory: ${{runner.workspace}}
+              env:
+                GITHUB_TOKEN: ${{secrets.AUTH_TOKEN}}
               run: |
                 git clone https://github.com/ORNL-Fusion/Stellarator-Tools.git ${{runner.workspace}}/Stellarator-Tools
-                git clone https://github.com/ORNL-Fusion/Stellarator-Tools-Docs.git
+                git clone https://user:$GITHUB_TOKEN@github.com/ORNL-Fusion/Stellarator-Tools-Docs.git
             - name: Create build directory.
               shell: bash
               working-directory: ${{runner.workspace}}/Stellarator-Tools
@@ -42,6 +44,7 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{secrets.AUTH_TOKEN}}
               run: |
+                git config --unset-all http.https://github.com/.extraheader
                 git config user.name ${{secrets.AUTH_USER}}
                 git config user.email ${{secrets.AUTH_EMAIL}}
                 git add *
