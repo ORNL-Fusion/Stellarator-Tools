@@ -117,8 +117,11 @@ endmacro ()
 find_package(Doxygen)
 
 if (DOXYGEN_FOUND)
-    set(DOXYGEN_PROJECT_NAME "Stellarator-Tools")
-    set(DOXYGEN_PROJECT_LOGO ${CMAKE_CURRENT_SOURCE_DIR}/images/flux_surfaces.png)
+    set (DOXYGEN_PROJECT_NAME "Stellarator-Tools")
+    set (DOXYGEN_PROJECT_LOGO ${CMAKE_CURRENT_SOURCE_DIR}/images/flux_surfaces.png)
+    set (DOXYGEN_EXCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/build ${CMAKE_CURRENT_SOURCE_DIR}/images)
+    set (DOXYGEN_ALIASES item{3}=\"<tr><td width=20%>\\fixed_width{\\1}</td><td width=50%>\\2</td><td width=30%>\\ref \\3</td></tr>\",item2{2}=\"<tr><td width=30%>\\1</td><td width=70%>\\2</td></tr>\",item3{3}=\"<tr><td width=20%>\\fixed_width{\\1}</td><td width=5%>\\2</td><td width=75%>\\3</td></tr>\",table_section{2}=\"\\subsection \\1 \\2^^<table border=1px width=80%>\",begin_table=\"<table border=1px width=80%>\",end_table=\"</table>\",table_subsection{2}=\"</table>\\subsubsection \\1 \\2^^<table border=1px width=80%>\",header{3}=\"<table border=1px width=80%><tr><td width=20%>\\fixed_width{\\1}</td><td width=50%>\\2</td><td width=30%>\\3</td></tr></table>\",header2{3}=\"<table border=1px width=80%><tr><td width=20%>\\fixed_width{\\1}</td><td width=5%>\\2</td><td width=75%>\\3</td></tr></table>\",fixed_width{1}=\"<tt>\\1</tt>\",header3{3}=\"<table border=1px width=80%><tr><td width=20%>\\fixed_width{\\1}</td><td width=20%>\\2</td><td width=60%>\\3</td></tr></table>\",item4{3}=\"<tr><td width=20%>\\fixed_width{\\1}</td><td width=20%>\\2</td><td width=60%>\\3</td></tr>\")
+    set (DOXYGEN_IMAGE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/images)
 
     doxygen_add_docs (doc)
 endif ()
