@@ -8,7 +8,7 @@ jobs:
         runs-on: unbuntu-latest
         steps:
             - name: Clone Repo
-                shell:bash
+                shell: bash
                 working-directory: ${{runner.workspace}}
                 run: |
                     git clone https://github.com/ORNL-Fusion/Stellarator-Tools.git ${{runner.workspace}}/Stellarator-Tools
