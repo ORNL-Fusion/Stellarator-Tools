@@ -1,30 +1,67 @@
 /*!
- * @page build_system V3FIT Build System
- * @brief Overview of the Cmake based build system for V3FIT.
+ * @page build_system Stellarator-Tools Build System
+ * @brief Overview of the Cmake based build system for the Stellarator-Tools
+ * suite of codes.
  * @tableofcontents
  *
  * @section build_system_intro Introduction
- * The V3FIT suite of codes contains two parallel build systems. This document
- * focuses on the new Cmake based build system. This newer build system also
- * controls the testing and generation of this documentation and is recommended
- * for all new users.
- *
- * The Cmake is a cross platform, build system generation tool. It provides 
- * automated facilities for finding libraries and determining source code 
- * dependencies. The Cmake tool is availible from 
- * <a href="http://www.cmake.org">cmake.org</a>. This suite requires Cmake 
- * version 2.8 or higher. Cmake can be configured by setting various variables
- * on the command line.
+ * The Stellarator-Tools suite of codes is designed as an umbrella project. The
+ * main build system is locacted in the
+ * <a href="https://github.com/ORNL-Fusion/Stellarator-Tools.git">Stellarator-Tools</a>
+ * GitHub repository. The build system in build around
+ * <a href="http://www.cmake.org">cmake</a> and requires a version greater than
+ * 3.14. This build system is designed to automatically download
+ * dependent projects when a tool is enabled. Cmake can be configured by setting
+ * various variables on the command line
  * @code
  -DVARIABLE=value
  -DOTHER_VARIABLE="value1 value2 value3"
  @endcode
- * Once a variable has been set on the cmake command line, that value is cached
- * and it is no longer necessary to reset it for subsequent Cmake commands.
+ * or by using the \fixed_width{ccmake} interactive tool. Once a variable has
+ * been set on the cmake command line, that value is cached and it is no longer
+ * necessary to reset it for subsequent Cmake commands. This build system is
+ * also designed to obtain the latest sources evertime the code is recompiled.
  *
- * For V3FIT, Cmake generates makefiles that can be used to build various 
- * components. The resulting makefiles contain a bunch of tasks. These takes can
- * be displayed using the
+ * @section build_system_clone Obtaining the code.
+ * The
+ * <a href="https://github.com/ORNL-Fusion/Stellarator-Tools.git">Stellarator-Tools</a>
+ * is the main project from which all subprojects are compiled. To obtain the
+ * code use the command
+ * @code
+ git clone https://github.com/ORNL-Fusion/Stellarator-Tools.git
+ @endcode
+ *
+ * @section build_system_config Configuring Build
+ * In this section we will focus on the \fixed_with{ccmake} tool. First navigate
+ * to root directory of the repository. Then create a build directory. Typically
+ * this is created at the root directory of the repository however it can be
+ * anywhere. From inside the build directory run the \fixed_width{ccmake}
+ * command.
+ * @code
+ cd Stellarator-Tools
+ mkdir build
+ ccmake ../
+ @endcode
+ *
+ * Initialially there will be no options.
+ * @image html cmake1.png
+ * At the bottom of the screen, there are various command. Pressing the
+ * \fixed_width{c} key begins the configure process. Once initally configured,
+ * there will be several options. Different tools in the Stellarator-Tools suite
+ * of codes can be configured to be built by toggling the
+ * \fixed_width{BUILD_<i>code</i>} from \fixed_width{off} to \fixed_width{on}.
+ * @image html cmake2.png
+ * After changing settings, keep pressing the \fixed_width{c} key until the
+ * \fixed_width{g} options appears.
+ * @image html cmake3.png
+ * After hitting the \fixed_width{g} option \fixed_width{ccmake} will exit and a
+ * \fixed_width{Makefile} will be generated. The codes can then be build using
+ * \fixed_width{make} command.
+ *
+ * @section build_system_make Makefile
+ * For Stellarator-Tools, Cmake generates makefiles that can be used to build
+ * various components. The resulting makefiles contain a bunch of tasks. These
+ * tasks can be displayed using the
  * @code
  make help
  @endcode
@@ -35,16 +72,22 @@
  @endcode
  *
  * @section build_system_dependencies Dependencies
- * Dependencies on any software project fall under two types. External libraies
- * that provide functionality that the code uses must be found for the build 
- * system to use. The second type of dependency is determining the proper build
- * order.
+ * Dependencies on any software project fall under three types. When enableing a
+ * code dependend codes are also automatrically enabled. By default, all codes
+ * build from the \fixed_width{master} branch. To build specific branches or
+ * tags, set the \fixed_width{BUILD_TAG_<i>code</i>} variables. Subprojects are
+ * registered using the \fixed_width{register_project} Cmake macro.
+ *
+ * The next type of dependecy is external libraies
+ * that provide functionality that the code uses must be found for the build
+ * system to use. The third type of dependency is determining the proper build
+ * order. Cmake automatically handles this step.
  *
  * @subsection build_system_libraries Libraries
- * The v3fit suite requires a few external libraries to build. LAPACK and BLAS
- * provide linear algebra routines. Optimized version of these libraies are 
- * typically included by an OS or compiler vendor. These packages are found 
- * automatically by Cmake using the 
+ * The codes in the Stellarator-Tools suite requires a few external libraries to
+ * build. LAPACK and BLAS provide linear algebra routines. Optimized version of
+ * these libraies are typically included by an OS or compiler vendor. These
+ * packages are found automatically by Cmake using the
  * @code
  find_package
  @endcode
@@ -54,17 +97,29 @@
  * @fixed_width{CMAKE_PREFIX_PATH} variable will allow the automated search
  * functions to find these files.
  *
- * The <a href="http://www.unidata.ucar.edu/software/netcdf/">NetCDF</a> 
- * provides routines for reading and writting binary files. Unlike the 
- * LAPACK/BLAS libraries, Cmake version 2.8 does not come with a built in
- * package to find the netcdf routines. These libraries must be specified 
- * manually by the defining
+ * The <a href="http://www.unidata.ucar.edu/software/netcdf/">NetCDF</a> library
+ * provides routines for reading and writting binary files. Unlike the
+ * LAPACK/BLAS libraries, Cmake does not come with a built in package to find
+ * the netcdf routines. Routines for automatically locating these in standard
+ * paths can be found are provided. If the path is not standard, set the
+ * @fixed_width{CMAKE_PREFIX_PATH}. Should both this methods fail the
  * @code
- -DNETCDF_INC_PATH="/path/to/the/netcdf/.inc/file"
- -DNETCDF_LIB_PATH="/path/to/the/netcdf/libs"
+ -DNetCDF_C_INCLUDE_DIR="/path/to/the/netcdf/include"
+ -DNetCDF_C_LIBRARY="/path/to/the/netcdf/lib/libnetcdf.a"
+ -DNetCDF_Fortran_LIBRARY="/path/to/the/netcdf/lib/libnetcdff.a"
  @endcode
- * If the NetCDF libraries were sucessfully found, the message "Using NetCDF 
- * should be displayed.
+ * can be set manually.
+ *
+ * The codes also may use the
+ * <a href="https://netlib.org/scalapack/">ScaLAPACK</a> library. Routines for
+ * finding these are also included. If the path is not standard, set the
+ * @fixed_width{CMAKE_PREFIX_PATH}. Should both this methods fail the
+ * @code
+ -DSCALAPACK_LIBRARY="/path/to/the/scalack/lib/libscalapack.a"
+ -DBLACS_LIBRARY="/path/to/the/scalack/lib/libblacs.a"
+ -DBLACS_INIT_LIBRARY="/path/to/the/scalack/lib/libblacsinit.a"
+ @endcode
+ * can be set manually.
  *
  * @subsection build_system_sources Sources
  * Cmake parses all the sources file to determine the proper source code level
@@ -145,44 +200,16 @@
  *                                   * Off,    Controls if code profiling is turned on or off.}
  * @end_table
  *
- * @subsection build_system_running_example Running Cmake Example
- * As an example a typical cmake command line used for the Auburn experiment is
- * @code
- cmake -DCMAKE_BUILD_TYPE:String=Release -DCMAKE_Fortran_COMPILER=gfortran -DNETCDF_INC_PATH=/usr/include/ -DNETCDF_LIB_PATH=/usr/lib -DCMAKE_Fortran_FLAGS=-DNEW_CODE -DEXTRA_RELEASE_FLAGS:String="-m64 -mfpmath=sse -march=native -msse4a -msse3"
- @endcode
- * The first defined variable, @fixed_width{CMAKE_BUILD_TYPE} tells cmake to 
- * generate an optimized build. By default Cmake builds in Debug mode. At any 
- * time, Cmake maybe reconfigured by redifining a variable. For instance if
- * cmake was configured as a Release build, it may be reconfigured as a debug 
- * build by redefining @fixed_width{CMAKE_BUILD_TYPE} as
- * @code
- cmake -DCMAKE_BUILD_TYPE:String=Debug
- @endcode
- * Note that only the @fixed_width{CMAKE_BUILD_TYPE} variable needed to be 
- * reset. When redefining a variable all the other variables remain the same.
- * 
- * Cmake has limited support for certain fortran compilers. This is because 
- * cmake needs to know the format and command line arguments of a specific 
- * compiler in order to generate a make file correctly. As a result, if there is
- * more than one compiler installed, cmake may find one it doesn't under stand.
- * As a result, for the Auburn builds, the @fixed_width{CMAKE_Fortran_COMPILER} 
- * must be forced to gfortran. Most users should not need to perform this step.
- *
- * For the @fixed_width{NETCDF_INC_PATH} and @fixed_width{NETCDF_LIB_PATH} 
- * variables see the @ref build_system_libraries section. All users need to 
- * define these two variables.
- * 
- * The @fixed_width{EXTRA_RELEASE_FLAGS} and the coresponding 
- * @fixed_width{EXTRA_DEBUG_FLAG} are optional variables that maybe used to 
- * define extra build flags. Extra flags can be used to specify extra compiler 
- * options for performance tuning or debugging purposes. It is not required that
- * these be set.
- *
  * @section build_system_build_directory Build Directory
  * CMake is configured to generate all build products in the build directory.
- * Commands can be found in build/bin. The various libraries that are created as
- * intermediate steps can be found in build/lib. Compiled modules for each 
- * project can be found in build/modules.
+ * The build products can be found in the
+ * \fixed_width{_deps/<i>code</i>-build/x<i>code</i>}. Optionally the tools can
+ * be installed using the
+ * @code
+ make install
+ @endcode
+ * command. Install location is controlled by the
+ * \fixed_width{CMAKE_INSTALL_PREFIX} variable.
  *
  * @section build_system_trouble_shooting Trouble Shooting
  * If problems are encountered with the build system it is recommened to first
