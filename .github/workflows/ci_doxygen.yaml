@@ -7,7 +7,7 @@ on:
 jobs:
     ci_doxygen:
         if: ${{github.ref_name}} == 'master'
-        runs-on: unbuntu-latest
+        runs-on: ubuntu-latest
         steps:
             - name: Clone Repo
               shell: bash
