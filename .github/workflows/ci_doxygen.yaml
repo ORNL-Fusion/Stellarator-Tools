@@ -3,8 +3,8 @@ on:
     workflow_dispatch:
     push:
 jobs:
-    if: ${{github.ref_name}} == 'master'
     ci_doxygen:
+        if: ${{github.ref_name}} == 'master'
         runs-on: unbuntu-latest
         steps:
             - name: Clone Repo
