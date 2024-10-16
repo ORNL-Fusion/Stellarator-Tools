@@ -1,0 +1,110 @@
+/*!
+ * @page architecture V3FIT Architecture
+ * @brief Overview of the architecture of V3FIT.
+ * @tableofcontents
+ *
+ * @section architecture_intro Introducion
+ * Dedesign goals of V3FIT are to provide an easily extensible code for the 
+ * purposes of fully three dimensional equilibirum reconstruction. To achieve 
+ * this, V3FIT uses object oriented programming techniquies to create abstract
+ * away the implementation details. This abstraction allows extension of code 
+ * without altering large parts of the code base.
+ *
+ * This page provided an overview of the V3FIT architecture and describes how 
+ * the various subsystems work together in a broad general sense. For specifics,
+ * consult the application programming interface (API) documentation.
+ *
+ * @section architecture_class_objects Class Objects
+ * V3FIT is written to be object oriented with five major classes. Two of the 
+ * class, the equlibrium and signal classes, are designed to be subclassed and 
+ * provide an abstract interface. While the model, parameter and reconstruction
+ * classes are designed as self contained objects to encapsilate the V3FIT 
+ * functionality. An overview of the V3FIT object oriented programming pattern
+ * is documented in the @ref class_anatomy page.
+ *
+ * @subsection architecture_class_objects_equilibrium Equilibrium
+ * The equilibrium class provides an abstract interface to abstract away the
+ * details of the equilibrium from the rest of V3FIT. All equilibrium solvers 
+ * are implemented as a subclass of this class. The methods of the equilibrium 
+ * class should be generally applicible to all equilibrium solvers and all 
+ * access to the equilibrium should be performed through the equilibrium class. 
+ * Currently, there are two subclasses of the equilibrium class implemented. The 
+ * equilibrium coding is contained in the @ref equilibrium module.
+ *
+ * @subsubsection architecture_class_objects_vmec_equilibrium VMEC
+ * The VMEC equilibrium is an fully three dimensional equilibrium solver that
+ * assumed closed nested flux surfaces. The VMEC equilibrium is implemented in 
+ * the @ref vmec_equilibrium module.
+ *
+ * @subsubsection architecture_class_objects_vacuum_equilibrium VACUUM
+ * The VACUUM equilibrium is a simple model that assumes there is no plasma. As 
+ * a result, the VACUUM equilibrium is only useful for reconstructing based on
+ * magnetic signals. The vacuum equilibirum computes the magnetic fields 
+ * generated external coils. This simplicity extends into the equilibrium coding
+ * as well. Since the vacuum doesn't contain the concept of temperature, 
+ * density, pressure and other quanitied that are only relievent in the presence
+ * of a plasma, many methods maybe inherited from the equilibium class. The 
+ * VACUUM equilibrium is implemented in the @ref vacuum_equilibrium module.
+ *
+ * @subsection architecture_class_objects_model Model
+ * The model class provides the primary interface signals to access the
+ * equilibrium model. The model contains everything that is not provided 
+ * directly from the equilibrium but generic every equilibrium. The model class
+ * stores an instance of the equilibrium. The model is implemented in the 
+ * @ref model module.
+ *
+ * @subsection architecture_class_objects_parameter Parameter
+ * The parameter class encapliates all the information and procdures to get, 
+ * set, increment and contraint a reconstruction parameter. The parameter class
+ * conatines an ID obtained from the model that represents a reconstructable 
+ * quantitiy. This quanitily may be subjected to a set of constraints. Access to
+ * the underlying quanitiy is handled through the model object's setter and
+ * getter routines. The parameter class is implemented in the @ref v3fit_params
+ * module.
+ *
+ * @subsection architecture_class_objects_signal Signal
+ * The signal class provides an abstract interface to abstract away the details 
+ * of the signals from the rest of V3FIT. Signals are further subclassed into 
+ * four categories. Diagnostics refer to experimentally measured quanities.
+ * Geometric signals refer to the shapes and positions of equilibrium. Priors 
+ * refer a priori knowlegde about the system. Combination allow combinig any
+ * privious signal in to composite signal. The signal class is implemented in 
+ * the @ref signal module.
+ *
+ * @subsubsection architecture_class_objects_diagnostic_signal Diagnostic
+ * The diagnostic class is a generic super class to experimentally measured 
+ * quantities. This class is subclassed by @ref magnetic, @ref sxrem, 
+ * @ref intpol, @ref thomson and @ref extcurz diagnostics. The diagnostic class 
+ * is implemented in the @ref diagnostic module.
+ *
+ * @subsubsection architecture_class_objects_geometric_signal Geometric
+ * The geometric class is a generic super class to geometric quantities. This 
+ * class is subclassed by the @ref limiter class. The geometric class is 
+ * implemented in the @ref geometric module.
+ *
+ * @subsubsection architecture_class_objects_prior_signal Prior
+ * The prior class is a generic super class to prior knowlegde quantities. This 
+ * class is subclassed by the @ref prior_gaussian class. Prior maybe defined on
+ * any quanitiy that me be simply looked up. If additional computation is 
+ * required the signal should be added as a diagnostic or geometric depending on
+ * context. The prior class is implemented in the @ref prior module.
+ *
+ * @subsubsection architecture_class_objects_combination_signal Combination Signals
+ * Combination classes allow signals to be combined in multiple ways. The 
+ * combination signal contains an array of signal pointers. Signals are combined
+ * by calling the get signal method on each pointed. The prior class is 
+ * implemented in the @ref signal module. Note, since this signal need to use 
+ * the signal interface, the rule of one class per module needs to be broken in
+ * order to avoid a circular module dependency.
+ *
+ * @subsection architecture_class_objects_reconstruction Reconstruction
+ * The reconstruction class encapsilated the reconstruction algrothium. The 
+ * reconstruction class is implemented in the @ref reconstruction module.
+ *
+ * @section architecture_class_objects_other Other Objects
+ * Other sections of the code are also implented as objects as well. The most
+ * important of these auxiliary objects is the context class. This class is a
+ * single object that contains all the memory and objects used by V3FIT. This 
+ * context can be used to store, copy and reset the state of V3FIT. The context 
+ * class is implemented in the @ref v3fit_context module.
+ */

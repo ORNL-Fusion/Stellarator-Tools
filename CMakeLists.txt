@@ -7,7 +7,6 @@ enable_testing ()
 include (FetchContent)
 find_package (Git)
 
-
 #-------------------------------------------------------------------------------
 #  Setup build types.
 #-------------------------------------------------------------------------------
@@ -111,6 +110,18 @@ macro (register_project name url default_tag)
         endforeach ()
     endif ()
 endmacro ()
+
+#-------------------------------------------------------------------------------
+#  Build Documentation
+#-------------------------------------------------------------------------------
+find_package(Doxygen)
+
+if (DOXYGEN_FOUND)
+    set(DOXYGEN_PROJECT_NAME "Stellarator-Tools")
+    set(DOXYGEN_PROJECT_LOGO ${CMAKE_CURRENT_SOURCE_DIR}/images/flux_surfaces.png)
+
+    doxygen_add_docs (doc)
+endif ()
 
 #-------------------------------------------------------------------------------
 #  Registers the projects. By specifying a name, directory, git url, tag and

@@ -1,0 +1,73 @@
+/*!
+ * @page testing Testing Framework Documentation
+ * @brief Overview of the testing framework.
+ * @tableofcontents
+ *
+ * @section testing_introduction Introduction
+ * For any large software project, testing is a critical part of the development
+ * process. Regular code testing helps ensure that code is not only correct, but
+ * remains correct as pieces change. Testing of the V3FIT code is currently
+ * implemented at two levels. The unit testing level tests components at the
+ * function and subroutine levels. This ensures code correctness. Regression 
+ * tests check the results of the code against expected values. Note that tests
+ * have only been setup for the new coding. If using the old coding version of
+ * V3FIT, tests are expected to fail.
+ *
+ * @section testing_unit_tests Unit Tests
+ * This tests are implemented at the module level. A module with unit testing
+ * capability should provide a *_test function. These tests should check each
+ * function and subroutine in the module against an analytic result. These tests
+ * are meant to test for correctness.
+ *
+ * All unit tests are run in the @ref task_unit_tests subroutine. Unit testing
+ * may be run by setting the @ref v3fit_input::my_task variable to 
+ * @fixed_width{unit_test} or by using the @fixed_width{-test} 
+ * @ref cl_parsing_sec.
+ *
+ * @section testing_regression_tests Regression Tests
+ * Regression tests run the code in full and check against expected results.
+ * These tests are make up of a collective of individual tests. Regression tests
+ * are typically setup where the first test check the sucessful operation of the
+ * code (ie. no segfault, crashes, etc...). Subsequent tests check individual
+ * pieces of the results against expected results.
+ *
+ * It is not recommended to setup tests where a result file is checked against
+ * a "Good" file. These types of tests can lead to false positives due to 
+ * changes in formatting of a file over the course of development or variations 
+ * in code run. For instance, the recout file and runlog files contain the
+ * the execution time of V3FIT. This time will change depending a variy of 
+ * factors.
+ *
+ * @section testing_cmake_framework Cmake Test Framework
+ * In the @ref build_system, a task is setup in the make file to configure and
+ * run the tests. All tests can be found in the testing directory. In the 
+ * testing directory there are a series of sub directories. The test_files 
+ * directory contains files that are common to all tests. These files are copied
+ * to the test working directory when tests are configured. The test_utilities 
+ * directory contains python scripts to test the results of files. The tests 
+ * directory contains the actual tests.
+ *
+ * In the tests directory, the various sub folders are the working directories
+ * for the tests. In each directory, the CMakeLists.txt contains the tests to 
+ * run. A test is added to this file using the add_test command. Each test
+ * needs a unique name and a command. The test is deamed to pass if the exit 
+ * code returned is zero.
+ *
+ * @section testing_cmake_running Running Tests
+ * Tests are run from the Cmake generated make file (see 
+ * @ref build_system_testing) or by using the @fixed_width{ctest} command.
+ * Individual or ranges of tests maybe run by using the 
+ * @fixed_width{ctest -R &ltregex&gt} command. As an example to run all the tests
+ * for diagnostic rotation use the command 
+ * @code
+ ctest -R ^diagnostic_rotation
+ @endcode
+ *
+ * @subsection testing_cmake_results Test Results
+ * Test results are immidately displayed showing the result of the number of 
+ * failed tests out of the total number of tests. Once tests have completed 
+ * running, a directory called Temporary in the Testing directory is created.
+ * Inside this directory is a file listing the last tests that failed and the 
+ * current log file for each test. When a test fails, it is encouraged to either 
+ * check the log file for the reason the test crashed or run the test manually.
+ */

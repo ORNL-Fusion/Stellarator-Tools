@@ -1,0 +1,62 @@
+/*!
+ * @mainpage
+ * @tableofcontents
+ * @section introduction Introduction
+ * This documentation combines end user and developer documentation into a 
+ * single reference.
+ *
+ * @section user User manuals
+ * These manuals cover topics for end users on how to operate V3FIT.
+ * * @ref cl_parsing_sec "Command Line Arguments" Descritptions of the command line arguments.
+ * * @ref namelist_sec "V3FIT namelist input file" User manual for the V3FIT namelist input file.
+ * * @ref result_file_main "Result output file." User manual for the result NetCDF file.
+ *
+ * @subsection user_model Model Manual.
+ * * @ref model_sec "Model Manual" User manual for the V3FIT model.
+ * * @ref emission_file_sec "Emission File Manual" User manual for the Soft X-ray emission file.
+ *
+ * @subsection user_equilibirum Equilibrium manuals.
+ * V3FIT is designed to support many different equilibrium solvers. Currently
+ * implemented are two. The VMEC solver and a Vacuum solver.
+ *
+ * @subsubsection user_vmec_equilibirum VMEC Equilibrium manuals.
+ * * <a href="http://vmecwiki.pppl.wikispaces.net"><b>VMEC Wiki</b></a> Information about the VMEC code.
+ * * @ref vmec_equilibrium_sec "VMEC Equilibrium Manual" User manual for the VMEC equilibrium.
+ *
+ * @subsubsection user_vacuum_equilibirum Vacuum Equilibrium manuals.
+ * * @ref vacuum_equilibrium_sec "Vacuum Equilibrium Manual" User manual for the Vacuum equilibrium.
+ * * @ref vacuum_namelist_sec "Vacuum namelist input file." User manual for the vacuum equilibrium namelist input file.
+ *
+ * @subsubsection user_siesta_equilibirum SIESTA Equilibrium manuals.
+ * * @ref siesta_equilibrium_sec "SIESTA Equilibrium Manual" User manual for the SIESTA equilibrium.
+ * * @ref siesta_namelist_sec "SIESTA namelist input file" User manual for the SIESTA namelist input file.
+ *
+ * @subsection user_diagnostic Diagnostic input files.
+ * Certain diagnostics require input files to describe the diagnostic. Below are
+ * documentation for the various files needed to define diagnostics.
+ * * @ref sxrem_dot_sec "Soft X-ray Diagnostic Dot File" User manual for the soft x-ray diagnostic dot file.
+ * * @ref intpol_dot_sec "Inteferometry/Polarimetry Diagnostic Dot File" User manual for the inteferometry/polarimetry diagnostic dot file.
+ * * @ref thomson_dot_sec "Thomson Scattering Diagnostic Dot File" User manual for the Thomson scattering diagnostic dot file.
+ * * @ref mse_dot_sec "Motional Stark Effect Diagnostic Dot File" User manual for the motional stark effect diagnostic dot file.
+ * * @ref ece_dot_sec "ECE Diagnostic Dot File" User manual for the ECE diagnostic dot file.
+ * * @ref sxrem_ratio_dot_sec "Soft X-ray Ratio Diagnostic Dot File" User manual for the soft x-ray ratio diagnostic dot file.
+ *
+ * @subsubsection user_v3rfun V3RFUN manual.
+ * Magnetic diagnostics require a preprocessing code V3RFUN to generate the input discription files.
+ * * @ref diagnostic_dot_sec "Magnetic Diagnostic Dot File" User manual for the magnetic diagnostic dot file.
+ * * @ref v3rfun_namelist_sec "V3RFUN namelist input file" User manual for the V3RFUN namelist input file.
+ * * @ref v3rfun_cl_parsing_sec "V3RFUN Command Line Arguments" User manual for the V3RFUN command line arguments.
+ *
+ * @subsubsection user_lgrid LGIRD manual.
+ * Limiter grids require a preprocessing code LGRID to generate the input discription file.
+ * * @ref lgrid_sec "LGRID User Documentation." User manual for the LGIRD code. 
+ *
+ * @section programmer Programmer Manuals
+ * These manuals are meant to document the various tools and structure used by
+ * V3FIT. Reading these pages is not necessary for the operation of V3FIT.
+ * * @ref build_system "Build System" Programming manual for the build system using CMake.
+ * * @ref doxygen "Doxygen" Manual for the generation of documentation.
+ * * @ref architecture "V3FIT Architecture" Programming manual overviewing the design of v3fit.
+ * * @ref class_anatomy "V3FIT Class Anatomy" Programming manual describing the structure of class objects.
+ * * @ref testing "Testing" Programming manual describing the testing framework.
+ */
