@@ -32,6 +32,7 @@
  * @subsubsection user_siesta_equilibirum SIESTA Equilibrium manuals.
  * * @ref siesta_equilibrium_sec "SIESTA Equilibrium Manual" User manual for the SIESTA equilibrium.
  * * @ref siesta_namelist_sec "SIESTA namelist input file" User manual for the SIESTA namelist input file.
+ * * @ref siesta_restart_sec "SIESTA restart file." User manual for the SIESTA restart file.
  *
  * @subsection user_diagnostic Diagnostic input files.
  * Certain diagnostics require input files to describe the diagnostic. Below are
