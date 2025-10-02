@@ -10,7 +10,7 @@ jobs:
                 mode: [Release, Debug, Sanitized]
                 exclude:
                   - os: macos-latest
-                     mode: Sanitized
+                    mode: Sanitized
         runs-on: ${{matrix.os}}
         steps:
             - name: CPU Info Mac
