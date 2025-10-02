@@ -19,7 +19,7 @@
  *
  * @subsection user_equilibirum Equilibrium manuals.
  * V3FIT is designed to support many different equilibrium solvers. Currently
- * implemented are two. The VMEC solver and a Vacuum solver.
+ * implemented are three. The VMEC solver, SIESTA solver, and a Vacuum solver.
  *
  * @subsubsection user_vmec_equilibirum VMEC Equilibrium manuals.
  * * <a href="http://vmecwiki.pppl.wikispaces.net"><b>VMEC Wiki</b></a> Information about the VMEC code.
