@@ -23,6 +23,8 @@ jobs:
               shell: bash
               run: |
                 sudo apt update
+                sudo apt-get install libblas-dev
+                sudo apt-get install liblapack-dev
                 sudo apt-get install libnetcdf-dev
                 sudo apt-get install libnetcdff-dev
                 sudo apt-get install libopenmpi-dev
@@ -45,5 +47,5 @@ jobs:
                 git config user.name ${{secrets.AUTH_USER}}
                 git config user.email ${{secrets.AUTH_EMAIL}}
                 git add *
-                git commit . -m "Update Doxygen docs."
+                git commit . --allow-empty -m "Update Doxygen docs."
                 git push origin main
