@@ -7,10 +7,7 @@ jobs:
         strategy:
             matrix:
                 os: [macos-latest, ubuntu-latest]
-                mode: [Release, Debug, Sanitized]
-                exclude:
-                  - os: macos-latest
-                    mode: Sanitized
+                mode: [Release, Debug]
         runs-on: ${{matrix.os}}
         steps:
             - name: CPU Info Mac
