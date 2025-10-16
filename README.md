@@ -56,6 +56,9 @@ After changing settings, keep pressing `c` until the `g` option appears.
 
 After hitting `g` option `ccmake` will exit and a `Makefile` will be generated. The codes can be built using the `make` command.
 
+## Installation
+After building the codes, they can be installed via the `make install` command. The tools and libraries will be installed in the location determined by `CMAKE_INSTALL_PREFIX`.
+
 ## Touble Shooting
 If `cmake` fails to find the correct libraries, you may need to set the `CMAKE_PREFIX_PATH` variable to help locate them.
 
