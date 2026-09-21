@@ -10,10 +10,14 @@ find_package (Git)
 #-------------------------------------------------------------------------------
 #  Setup build types.
 #-------------------------------------------------------------------------------
+if (NOT CMAKE_BUILD_TYPE)
+    set (CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+endif ()
 set_property (CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
               Debug
               Release
-              Sanitized
+              MinSizeRel
+              RelWithDebInfo
 )
 
 #  Make sure the prefix path appears as a ccmake variable.
@@ -23,10 +27,6 @@ set (CMAKE_PREFIX_PATH "" CACHE PATH "Search paths for dependency look up.")
 #  Sanitizer options
 #-------------------------------------------------------------------------------
 add_library (sanitizer INTERFACE)
-target_compile_options (sanitizer
-                        INTERFACE
-                        $<$<CONFIG:Sanitized>:-g>
-)
 
 macro (register_sanitizer_option name default)
     string (TOUPPER ${name} upper_name)
@@ -35,20 +35,20 @@ macro (register_sanitizer_option name default)
 
     target_compile_options (sanitizer
                             INTERFACE
-                            $<$<CONFIG:Sanitized>:$<$<BOOL:${SANITIZE_${upper_name}}>:-fsanitize=${name}>>
+                            $<$<BOOL:${SANITIZE_${upper_name}}>:-fsanitize=${name}>
     )
     target_link_options (sanitizer
                          INTERFACE
-                         $<$<CONFIG:Sanitized>:$<$<BOOL:${SANITIZE_${upper_name}}>:-fsanitize=${name}>>
+                         $<$<BOOL:${SANITIZE_${upper_name}}>:-fsanitize=${name}>
     )
 endmacro ()
 
-register_sanitizer_option (address ON)
+register_sanitizer_option (address OFF)
 register_sanitizer_option (leak OFF)
 register_sanitizer_option (memory OFF)
 register_sanitizer_option (thread OFF)
-register_sanitizer_option (undefined ON)
-register_sanitizer_option (float-divide-by-zero ON)
+register_sanitizer_option (undefined OFF)
+register_sanitizer_option (float-divide-by-zero OFF)
 
 #-------------------------------------------------------------------------------
 #  Trap options
@@ -109,17 +109,19 @@ endif ()
 #-------------------------------------------------------------------------------
 #  Define a macro to register new projects.
 #-------------------------------------------------------------------------------
-macro (register_project name url default_tag)
+macro (register_project name default_host default_fork default_tag)
     string (TOUPPER ${name} dir)
 
     option (BUILD_${dir} "Build ${name} subproject." OFF)
     set (BUILD_TAG_${dir} ${default_tag} CACHE STRING "Name of the tag to checkout.")
+    set (BUILD_HOST_${dir} ${default_host} CACHE STRING "Host of the git repository.")
+    set (BUILD_FORK_${dir} ${default_fork} CACHE STRING "Fork name for tool.")
 
     if (BUILD_${dir})
 #  Set up the sub project repository.
         FetchContent_Declare(
             ${name}
-            GIT_REPOSITORY ${url}
+            GIT_REPOSITORY ${URL_PROTO}${BUILD_HOST_${dir}}${URL_SEP}${BUILD_FORK_${dir}}/${dir}.git
             GIT_TAG origin/${BUILD_TAG_${dir}}
             SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${dir}
         )
@@ -134,7 +136,7 @@ macro (register_project name url default_tag)
                 WORKING_DIRECTORY ${${name}_SOURCE_DIR}
             )
 
-#  Add a taraget to pull the latest version before building. Note dependency is
+#  Add a target to pull the latest version before building. Note dependency is
 #  registered in the sub project CMakeList.txt. Not sure how this should handle
 #  multiple targets in a project yet. Name must match the subproject pull_
 #  dependency.
@@ -184,13 +186,15 @@ endif ()
 
 # Register BOOZ_XFORM
 register_project(booz_xform
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/BOOZ_XFORM.git
+                 github.com
+                 ORNL-Fusion
                  master
                  libstell)
 
 # Register V3FIT
 register_project(v3fit
-                 ${URL_PROTO}github.com${URL_SEP}cianciosa/V3FIT.git
+                 github.com
+                 cianciosa
                  master
                  siesta
                  v3rfun
@@ -198,55 +202,64 @@ register_project(v3fit
 
 # Register V3RFUN
 register_project(v3rfun
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/V3RFUN.git
+                 github.com
+                 ORNL-Fusion
                  master
                  libstell)
 
 # Register SIESTA
 register_project(siesta
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SIESTA.git
+                 github.com
+                 ORNL-Fusion
                  master
                  parvmec
                  bmw)
 
 # Register LGRID
 register_project(lgrid
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/LGRID.git
+                 github.com
+                 ORNL-Fusion
                  master
                  libstell)
 
 # Register SURFACE
 register_project(surface
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/SURFACE.git
+                 github.com
+                 ORNL-Fusion
                  master
                  bmw)
 
 # Register BMW
 register_project(bmw
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/BMW.git
+                 github.com
+                 ORNL-Fusion
                  master
                  libstell)
 
 # Register DESCUR
 register_project(descur
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/DESCUR.git
+                 github.com
+                 ORNL-Fusion
                  master
                  libstell)
 
 # Register PARVMEC
 register_project(parvmec
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/PARVMEC.git
+                 github.com
+                 ORNL-Fusion
                  master
                  makegrid
                  libstell)
 
 # Register MAKEGRID
 register_project(makegrid
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/MAKEGRID.git
+                 github.com
+                 ORNL-Fusion
                  master
                  libstell)
 
 # Register LIBSTELL
 register_project(libstell
-                 ${URL_PROTO}github.com${URL_SEP}ORNL-Fusion/LIBSTELL.git
+                 github.com
+                 ORNL-Fusion
                  master)
