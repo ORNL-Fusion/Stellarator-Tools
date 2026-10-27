@@ -56,6 +56,20 @@ After changing settings, keep pressing `c` until the `g` option appears.
 
 After hitting `g` option `ccmake` will exit and a `Makefile` will be generated. The codes can be built using the `make` command.
 
+## Notes for macOS and cmake version >= 4
+
+The gfortran version 16 has a incompatability with the macOS 27 SDK. In order to get the correct `sysroot` you will need to configure `cmake` or `ccmake` with
+
+```
+cmake -DCMAKE_OSX_SYSROOT=macosx ../
+```
+
+or
+
+```
+ccmake -DCMAKE_OSX_SYSROOT=macosx ../
+```
+
 ## Installation
 After building the codes, they can be installed via the `make install` command. The tools and libraries will be installed in the location determined by `CMAKE_INSTALL_PREFIX`.
 

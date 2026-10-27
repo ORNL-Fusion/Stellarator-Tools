@@ -24,15 +24,6 @@ set_property (CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
 set (CMAKE_PREFIX_PATH "" CACHE PATH "Search paths for dependency look up.")
 
 #-------------------------------------------------------------------------------
-#  Platform specific configurations.
-#-------------------------------------------------------------------------------
-if (${APPLE})
-    if (NOT CMAKE_OSX_SYSROOT)
-       set (CMAKE_OSX_SYSROOT macosx)
-    endif ()
-endif ()
-
-#-------------------------------------------------------------------------------
 #  Sanitizer options
 #-------------------------------------------------------------------------------
 add_library (sanitizer INTERFACE)
