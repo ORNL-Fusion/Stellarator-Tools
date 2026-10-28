@@ -119,13 +119,6 @@ macro (register_project name default_host default_fork default_tag)
 
     if (BUILD_${dir})
         if (GIT_FOUND)
-#  By default cmake clones projects in a headless state. After the repo is
-#  cloned checkout the requested tag so repo is in a working state.
-            execute_process(
-                COMMAND ${GIT_EXECUTABLE} checkout ${BUILD_TAG_${dir}}
-                WORKING_DIRECTORY ${${name}_SOURCE_DIR}
-            )
-
 #  Add a target to pull the latest version before building. Note dependency is
 #  registered in the sub project CMakeList.txt. Not sure how this should handle
 #  multiple targets in a project yet. Name must match the subproject pull_
@@ -147,6 +140,15 @@ macro (register_project name default_host default_fork default_tag)
         )
 
         FetchContent_MakeAvailable(${name})
+
+        if (BUILD_${dir})
+#  By default cmake clones projects in a headless state. After the repo is
+#  cloned checkout the requested tag so repo is in a working state.
+            execute_process(
+                COMMAND ${GIT_EXECUTABLE} checkout ${BUILD_TAG_${dir}}
+                WORKING_DIRECTORY ${${name}_SOURCE_DIR}
+            )
+        endif ()
 
 # Anything after the the tag is assumed to be a project dependency.
         set (depends "${ARGN}")
