@@ -118,16 +118,6 @@ macro (register_project name default_host default_fork default_tag)
     set (BUILD_FORK_${dir} ${default_fork} CACHE STRING "Fork name for tool.")
 
     if (BUILD_${dir})
-#  Set up the sub project repository.
-        FetchContent_Declare(
-            ${name}
-            GIT_REPOSITORY ${URL_PROTO}${BUILD_HOST_${dir}}${URL_SEP}${BUILD_FORK_${dir}}/${dir}.git
-            GIT_TAG origin/${BUILD_TAG_${dir}}
-            SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${dir}
-        )
-
-        FetchContent_MakeAvailable(${name})
-
         if (GIT_FOUND)
 #  By default cmake clones projects in a headless state. After the repo is
 #  cloned checkout the requested tag so repo is in a working state.
@@ -147,6 +137,16 @@ macro (register_project name default_host default_fork default_tag)
                 WORKING_DIRECTORY ${${name}_SOURCE_DIR}
             )
         endif ()
+
+#  Set up the sub project repository.
+        FetchContent_Declare(
+            ${name}
+            GIT_REPOSITORY ${URL_PROTO}${BUILD_HOST_${dir}}${URL_SEP}${BUILD_FORK_${dir}}/${dir}.git
+            GIT_TAG origin/${BUILD_TAG_${dir}}
+            SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${dir}
+        )
+
+        FetchContent_MakeAvailable(${name})
 
 # Anything after the the tag is assumed to be a project dependency.
         set (depends "${ARGN}")
