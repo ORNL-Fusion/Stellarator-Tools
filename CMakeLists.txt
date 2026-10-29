@@ -118,6 +118,19 @@ macro (register_project name default_host default_fork default_tag)
     set (BUILD_FORK_${dir} ${default_fork} CACHE STRING "Fork name for tool.")
 
     if (BUILD_${dir})
+        if (GIT_FOUND)
+#  Add a target to pull the latest version before building. Note dependency is
+#  registered in the sub project CMakeList.txt. Not sure how this should handle
+#  multiple targets in a project yet. Name must match the subproject pull_
+#  dependency.
+            add_custom_target(
+                pull_${name}
+                ALL
+                COMMAND ${GIT_EXECUTABLE} pull
+                WORKING_DIRECTORY ${${name}_SOURCE_DIR}
+            )
+        endif ()
+
 #  Set up the sub project repository.
         FetchContent_Declare(
             ${name}
@@ -128,22 +141,11 @@ macro (register_project name default_host default_fork default_tag)
 
         FetchContent_MakeAvailable(${name})
 
-        if (GIT_FOUND)
+        if (BUILD_${dir})
 #  By default cmake clones projects in a headless state. After the repo is
 #  cloned checkout the requested tag so repo is in a working state.
             execute_process(
                 COMMAND ${GIT_EXECUTABLE} checkout ${BUILD_TAG_${dir}}
-                WORKING_DIRECTORY ${${name}_SOURCE_DIR}
-            )
-
-#  Add a target to pull the latest version before building. Note dependency is
-#  registered in the sub project CMakeList.txt. Not sure how this should handle
-#  multiple targets in a project yet. Name must match the subproject pull_
-#  dependency.
-            add_custom_target(
-                pull_${name}
-                ALL
-                COMMAND ${GIT_EXECUTABLE} pull
                 WORKING_DIRECTORY ${${name}_SOURCE_DIR}
             )
         endif ()
